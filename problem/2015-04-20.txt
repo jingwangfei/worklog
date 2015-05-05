@@ -1,0 +1,128 @@
+1: 网路中, 从发送数据到接受数据的流程是什么?
+	(1) 向网关发送请求.
+	(2) 网关请求dns服务器解析域名获得ip地址.
+		然后向指定的ip地址的网关发送请求
+	(3) 目的网关将数据发送到目的地址
+	(4) 然后原路返回
+
+
+2: linux中网络问题的解决方案
+	1> ping 网管
+		ping 
+	
+	2> 查看dns服务
+		nslookup 
+		
+	3> 查看路由路径
+		traceroute
+		tracepath
+		tracert...
+
+3: vi编辑器中如何进行查找和替换呢?
+	/str --> 查看字符串
+	
+	:s/str/str1 --> 将本行中的str替换为str1
+	:%s/str/str1 --> 将全部替换
+
+4: yum的问题排除
+	配置文件没有错误, 
+	最后查出的问题是, 公司拦截了.
+
+
+5: Java5中的atomic
+	(1) 使用场景
+		在多个线程共享变量的时候, 才会使用这个atomic, 不然不使用.
+	
+	(2) 类体系结构以及核心方法
+		AtomicInteger, AtomicIntegerArray, AtomicIntegerFileUpdater
+	 
+	(3) 原理
+		是采用了版本的方式进行检查是否进行过了修改.
+
+6: Java5中的线程池
+	(1) 使用场景以及好处
+		单线程太慢, 多线程太浪费资源, 使用线程池, 用来开发服务器的时候使用
+		
+	(2) 什么是线程池呢? 线程池的使用流程.
+		当一个任务过来的号时候, 首先从线程池中获得一个线程, 
+		然后去执行任务, 
+		当线程池为空的时候, 那么任务将进行等待.
+		
+	
+	(2) jdk5中的线程池的体系
+		Executors, --> 工具类, 用来获得不同类型的线程池
+			固定线程池
+			可变线程池
+			调度线程池
+		ExecutorService --> 线程池 execute()方法
+		ScheduleExecutorService --> 调用线程池 shedule方法
+		
+	(4) 源码:
+		是通过队列实现的线程池
+		
+7: sql 联系
+         ID NAME                                               COURSE                                             SCORE
+----------- -------------------------------------------------- -------------------------------------------------- -----
+          1 张三                                               语文                                                  81
+          2 张三                                               数学                                                  75
+          3 李四                                               语文                                                  81
+          4 李四                                               数学                                                  90
+          5 王五                                               语文                                                  81
+          6 王五                                               数学                                                 100
+          7 王五                                               英语                                                  90
+
+	(1) 查看所有的人总分
+	
+	(2) 查看分数都大于80的人
+		select * from Student A where (select score from studetn B where a.id = b.id and b.course = '英语')..
+	
+	(3) 查看重复数据
+		select a.id from studetn a, student b group by a.id having count(*) > 1
+	
+	(4) 删除重复数据
+		delete from studetn where id in (select a.id from studetn a, student b group by a.id having count(*) > 1) limit 1;
+
+8: js
+	js中的null, undefined, Object等数据类型
+		// js中的类型有6中: null, undefined, number, bolean, string, object, 前5种为基本类型, 最后一种为引用类型
+		// NaN是一个特殊的number类型, null是一个特殊的object类型, 这个其实是一个错误, 但是沿用了. 
+		// undefined当未定义变量, 或者是变量定义未赋值, 或者是函数没有返回值的时候, 那么就是undefined.
+  		alert(typeof NaN); // number 
+		alert(typeof null); // object
+		alert(typeof undefined); // undefined
+		
+		// unidefined 和 null相等, 因为undefined就是从null继承来的.
+		alert(null == undefined);
+		// NaN与任何值都不相等, 同自己也不相等.
+		alert(NaN == NaN);
+		
+	js中的instanceof, typeof
+		TYPEof是一元运算符,用来判断一个变量的类型		
+		instanceof是双目运算符, 用来判断一个变量是否属于某个类型
+
+	js中的变量的范围
+		
+	js中的this关键字的使用
+	
+
+
+9: 
+	1> 从内存中的角度分析, Java中的实例变量和局部变量.
+	
+	2> 	在创建子类对象之前必须创建父类对象.(有父亲才有孩子)
+		创建父类对象有2种方式:
+			隐士创建, 会自动调用父类的无参构造方法, 如果没有, 则报错
+			显示创建, 
+				在进行显示创创父类对象的时候, 使用super, 必须是第一条语句,
+				这就保证了不在没有对象创建的时候, 就调用方法
+				
+	3> 先进行强制类型转换, 然后在运行计算.
+		在计算过程中, 自动向上转.
+		
+	4> 从内存的角度看super关键字, 以及创建子类对象的时候必须创建父类
+		super就是指向父类对象的指针
+		
+	5> 从内存的角度看, 父类引用指向子类
+		属性不存在多态直说
+		
+	

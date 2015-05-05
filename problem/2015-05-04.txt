@@ -1,0 +1,40 @@
+1: 约定优于配置
+	约定优于配置.
+
+2: 配置思想:
+	myBatis, IBatis, sql语句配置.
+	所有的参数都配置在一个类中.
+	
+3: 继承, 实现思想, 封装思想..
+	IBase, BaseDao, ...
+	抽象实体的实现, 模拟了大部分框架提供的 '继承类'
+	
+4: 整体逻辑图也就是序列图
+
+5: 类图
+
+6: jaxb, orm思想
+	可以将任何不同的格式的数据, 转化为jAVA对象.
+	
+7: 声明周期思想
+	模拟servlet声明周期的思想, 
+	BaseRequest中的方法.
+	
+8: 设计模式思想:
+	工厂模式, 单列模式, 回调模式, 模板模式
+
+9: 反射思想:
+	在类的继承体系中,反射用的还是比较多的.
+	
+	
+	java
+	-Dcom.sun.management.jmxremote
+	-Dcom.sun.management.jmxremote.port=1095 
+	-Dcom.sun.management.jmxremote.ssl=false 
+	-Dcom.sun.management.jmxremote.authenticate=true 
+	-Dcom.sun.management.jmxremote.password.file=../conf/jmxremote.password 
+	-Dcom.sun.management.jmxremote.access.file=../conf/jmxremote.access 
+	-cp ../common/ec_scheduler.jar;
+		../common/log4j-1.2.16.jar;
+		../conf/com.aspire.ec.scheduler.classloader.ECBootstrap
+

@@ -1,0 +1,77 @@
+1: orcal中的锁使用:
+	(1) 如何对一条记录加锁呢?
+			手动枷锁: select * from table_name of ... wait seconds [nowait]  skip locked
+			自动枷锁: insert delete update
+		
+	(2) 加上锁后, 对其他事务有什么影响呢?
+			其他事务可以读取该记录, 但是不能修改该记录.(并且读取的时候, 之前的数据, 不会发生脏读)
+					可以操作该表中的其他记录, 不会收到任何影响的.
+	
+	(3) 如何释放锁呢?
+			当事务提交, 或者是回滚.
+
+
+2: 如何设置默认值呢?
+	如果是使用hibernate来进行数据的插入, 这个时候所有是有hibernate自动生成的insert语句,
+	它会明确写上所有的字段, 对于没有数据的字段是, null (null可以插入 字符, 数字, 日期类型)
+	如何要设置默认值, 就需要在Java代码中设置, 
+	如果在数据库中设置, hibernate会直接使用nUll覆盖掉默认值得.所以在数据库设置默认是没有效果的.
+
+
+3: Integer long, ...如何进行互相转换呢?
+	Integer 类中又 intValue)(), longValue(), floatValue()...
+	包装类和原始类型, 可以使用构造方法 + 上面的方法来进行互相转换.
+
+
+4: apache项目:
+	PropertyUtils | PropertyDescriptor
+		describe --> 将一个bean转换为map
+		getWriterMethod 
+		getPropertyDescription()
+		getPropertyType
+		getReadMethod
+	
+	beanUtils
+		describe...讲bean转换为Map
+		populate...将map转换为bean
+		getProperty...获得属性
+		setProperty...设置属性
+	
+	convertUtils
+		convertUtils.register(converter, clazz)...注册
+		convertUtils.lookup
+		convertUtils.conver()
+		在执行方法的时候, 会先进行值得转换.
+		
+	StringUtils
+		里面有很多的字符处理的方法.
+		
+
+
+6: 数据结构:
+		Btree  ----> 索引
+		treeMap ---> 红黑树
+	
+	数据结构的学习方式:
+		(1) 这个数据结构的定义, 又有哪些特点
+		
+		(2) 有哪些核心操作呢?
+		
+		(3) 这个数据结构在哪里使用到了呢?
+
+
+
+7: 如何解决重复订单的问题:
+	(1) 跳转类型 采用 重定向类型
+		这样在用户提交后, 浏览器的地址栏会进行改变的.
+	
+	(2) 使用struts2的token机制防止重复提交
+	
+
+8: 	
+	struts2的全局日期转化器
+	struts2 与 json 的整合
+	struts2 如何实现文件上传时的进度.
+	
+
+

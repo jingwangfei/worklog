@@ -1,0 +1,127 @@
+1: 总结高级开发工程/ 大数据开发工程师 / 与计算工程师需要学习的技能.
+
+
+2: 模拟orcal的事务隔离级别, 以及 orcal中的锁
+	
+	事务隔离级别基本知识:
+		一个连接可以包含多个事务, 
+		对新创建的事务, 默认的隔离级别是read committed;
+		我们可以对每一个事务都设计隔离级.
+
+	何时开启一个事务呢?
+		当进行dml操作的时候, 会开启一个事务
+	
+	何时关闭一个事务呢?
+		当 commit, rollback, 或者是ddl语句的时候会结束事务
+
+3: 解决需求的问题:
+	1> 看需求文档, 构建需求页面. 
+	2> 有哪些功能, 以数据流的方式分析
+		
+
+4: 设计数据库表:
+	添加:
+		上传附件
+		问题描述
+		您的联系电话
+		您的姓名
+		您的E-mail地址
+		
+	列表:
+		序号
+		客户名称
+		ECid
+		提单人姓名
+		意见建议
+		提交时间
+		状态(待回复/已回复)
+		
+	回复:
+		提交时间
+		已回复意见
+		回复内容
+		
+	详情:
+		提交时间
+	
+
+ec表				意见建议表:							回复表:						表
+						主键							主键							主键
+	1			*					1					*
+	<-------------		关联集团id  < ------------------ 意见表id							关联字段
+																							详情功能字段:
+							提交时间					 回复内容							
+																							列表功能字段:
+							状态						 userid(运营人员)
+																							添加功能字段:
+							E-mail地址					回复时间
+							姓名
+							联系电话
+							问题描述
+							附件
+							
+							客户名称
+							ECID
+
+						
+				
+	
+	create table selfopinion (
+		id number(10, 0) primary key,  -- 
+		user_id number(11, 0) not null, --
+		email varchar(30), -- 邮箱
+		name varchar(30), -- 姓名
+		phone_num varchar(20), -- 联系电话
+		description varchar(500), -- 意见描述
+		attachment_path varchar(100), -- 附件地址
+		reply_status number(1, 0) default 0, -- 回复状态: 0未回复, 1: 回复
+		create_time date not null, -- 创建时间
+		ec_id varchar2(30) not null, -- 集团id
+		ec_name varchar2(256) not null -- 集团名称
+	)
+	
+	create table self_opinion_reply (
+		id number(9, 0) primary key, --
+		user_id number(11, 0) not null, --
+		reply_time date not null, -- 回复时间
+		self_opinion_id number(10, 0) not null, -- 意见建议主键id
+		content varchar2(500) -- 内容
+	)
+	
+	
+	
+5: 如何利用myeclipse反向生成dao, 和实体呢?
+	
+	
+
+
+
+
+
+
+6: 
+	beanutisl
+		PropertyUtils
+	
+	日期查询条件
+		private Date pubDateBegin;
+		private Date pubDateEnd;
+	
+	正则表达式:
+		g i m 
+		s 
+		\n
+		/(^\s*)|(\s*$)/g
+		
+	list封装思想
+	
+	hashmap 与 linkedmap的区别
+	
+	编码风格:
+	
+	
+	http://card.dev.cn:8080/doms_web/notify/editCommAnnouncement_list.do?listViewName=EditCommAnnouncementListView
+	http://card.dev.cn:8080/doms_web/selfuserinfo/selfopinion_list.do?listViewName=SelfOpinionListView&orderBy=id&ascDesc=asc&pageNum=0&countEachPage=10&ecName=&userFullName=&createTimeBegin=&createTimeEnd=&replyStatus=&page=
+
+
+

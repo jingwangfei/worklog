@@ -1,0 +1,128 @@
+1: 设置myclipse的内存大小
+	(1) 在myclipse的安装目录下找到myeclipse.ini文件:
+		修改:
+			-vmargs
+			-Xmx512m
+			-XX:MaxPermSize=256m
+			-XX:ReservedCodeCacheSize=64m
+
+	(2)  在myclipse中window-preference-java-insta jre-edit- default vm '
+			-Xms128m   -Xmx512m
+
+
+2: Linux系统中的find命令:
+	find 查找起始点 [options...] [paramsters...]
+	find命令: 在制定的目录下查找指定条件文件和目录, 是全盘查找, 速度比较慢
+		
+	指定条件:
+		时间条件:
+			(1)
+				-cdate 创建时间
+				-adata 访问时间
+				-mdata 修改时间
+			(2)
+				5: 第前5天的内容, 是一个刻度, 不是范围
+				+5: 5天前文件, 5天前的那个时间段
+				-5: 5天后创建的文件, 也是个时间段.
+			
+		所属用户组和用户: 
+			-user -group 
+			在指定目录下查找指定用户和指定用户组的文件
+			
+		文件名称和类型条件:
+			-type f : 普通文件类型
+			-type d : 目录
+			-name "%%": 模糊查询
+			-name dd: 精确查询
+		
+		其他条件:
+			size: 文件大小
+			
+
+3: linux系统的vi编辑器
+	(1) 利用vi编辑器创建一个新的文件
+		利用vi编辑器打开一个文件
+		vi 文件名称
+	
+	(2) 退出: :q
+		保存: :w
+		保存退出: :wq
+		强制退出: :q!
+		
+	(3) 在普通模式下如何操作
+		可以使用 jklh 来在行内进行操作
+		可以使用 g :set nu 来在行之间进行操作
+		
+	(4) 普通模式转化为插入模式:
+			可以使用i a A o O 来进行模式转
+		插入模式转化为普通模式:
+			可以使用ese来进入普通模式.
+			
+4: orcal中的序列:
+	(1) 什么是序列
+		序列就是指 顺序增长的列
+		
+	(2) 序列的作用:
+		当一个表中的某个数字类型的字段要求在插入数据的时候, 自动进行增长, 那么这个时间就要使用血猎
+		
+	(3) 序列的使用:
+		创建:
+			create sequence seq_name
+			start with
+			increment by
+			minValue
+			maxValue
+			cycle
+			nocache
+			
+		使用:
+			insert into table_name values(myseq.nextVal) --> nextVal
+			insert into table_name values(myseq.currVal) --> currVal
+
+
+5:  待完成的功能: 
+	插入功能待完成的呢?
+		--- 由于数据量比较大, 导致页面需要等待很长的时间, 因此需要一个用户等待机制.
+		
+		
+	查询功能:
+		--- 需要查询数据
+	
+	
+	下载功能:
+		--- OrderExcelTool. createExcel()
+		
+	
+	
+6: 业务关系
+	查询关系
+		SID ORDER_RELATION.SERVICE_ID
+		单号 SERVICE_HANDLE_ORDER.ORDER_ID
+		订购关系ID ORDER_RELATION.RELATION_ID
+		集团客户名称 ORDER_RELATION.EC_NAME
+		主办省 ORDER_RELATION.PROV_ID
+		SID配置信息 ORDER_RELATION.SERVICE_INFO
+	
+	服务id 和 业务id一样
+		1010000002
+		1720000002
+	
+
+7: 技术提升
+
+	orcal分页查询
+		SELECT * FROM ( SELECT A.*, ROWNUM RN FROM (SELECT * FROM TABLE_NAME) A WHERE ROWNUM <= 20 )
+		
+		select service_id, relation_id, ec_name, prov_id, service_info from 
+		( SELECT A.*, ROWNUM RN FROM (SELECT * FROM order_relation) A WHERE ROWNUM <= 10 )
+		
+		
+
+		
+	
+		
+
+
+		
+	
+	

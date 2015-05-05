@@ -1,0 +1,262 @@
+1: orcal中的存储过程:
+
+	(1) 为什么要使用存储过程? 也就是说你鱼洞了什么问题, 要用存储过程呢?
+		存储过程的好处是什么呢?
+		1> 存储过程是讲过编译的, 运行效率比较高
+				编译		运行
+			sql ---> 指令集 --->
+			每条sql语句都是先进过编译, 然后在运行.
+			但是存储过程是预编译的, 直接进行运行的.
+		
+		2> 存储过程安全性
+			为了安全性, 或者是隐私性, 导致某些表并不能直接开放给用户, 比如说是工资表,
+			用户表, 资金账户表等其他表. 
+			这个时候就可以通过存储过程这个中间桥梁来操作隐私表.
+	
+	(2) 存储过程的使用:
+		1> 无输出参数的存储过程
+			1: 创建存储过程
+				create or replace procedure testa(param_id in number, param_name in varchar2(50))
+				as/is
+					[局部变量的声明]
+				begin
+					insert into test_student values(param_id, param_name);
+				end testa;
+		
+				create or replace procedure proc_testa(param_id in number, param_name in varchar) is
+				begin
+				  insert into test_student(id, name) values(param_id, param_name);
+				end proc_testa;
+				
+			2: Java中调用无参存储过程
+				try {
+					getConnection(url, name, password);
+					CallableStatement cstmt = connection.prepareCall("{ call proc_testa(?, ?) }"); // 占位符, callableStatement
+					cstmt.setInt(1, 111); // 设置输入参数, 索引是从1开始
+					cstmt.setString(2, "xiaoma");
+					
+					cstmt.execute();
+					System.out.println("调用存储过程插入成功...");
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+		
+		2> 有输出参数的存储过程
+			1: 存储过程
+				create or replace procedure proc_testb (param_id in number, param_name out varchar)
+				as 
+					select name into param_name from test_student where id = param_id;
+				begin
+				end proc_testb;
+		
+			2: Java调用
+				try {
+					getConnection(url, name, password);
+
+					CallableStatement cstmt = connection.prepareCall("{ call proc_testb(?, ?) }");
+					cstmt.setInt(1, 6);
+					cstmt.registerOutParameter(2, Types.VARCHAR); // 注册输出参数
+
+					cstmt.execute();
+					System.out.println(cstmt.getString(2));
+
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+		
+		3> 返回列表的存储过程
+			1: 创建存储过程
+			
+				====== 创建cursor类型 ====
+				create or replace package test_cursor_package 
+				as
+				  type test_result_cursor is ref cursor;
+				end test_cursor_package;
+				
+				===== 存储过程 =====
+				create or replace procedure proc_testc(param_result out test_cursor_package.test_result_cursor)
+				as
+				begin
+					open param_result for select * from test_student;
+				end proc_testc;
+			
+			2: 调用
+				try {
+					getConnection(url, name, password);
+
+					CallableStatement cstmt = connection.prepareCall("{ call proc_testc(?) }");
+					cstmt.registerOutParameter(1, OracleTypes.CURSOR);// oracle 游标类型
+
+					cstmt.execute();
+					ResultSet resultSet = (ResultSet) cstmt.getObject(1); // 获得结果集
+
+					while (resultSet.next()) {
+						System.out.println(resultSet.getInt(1) + ", " + resultSet.getString(2) + ", " + resultSet.getString(3));
+					}
+
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+		
+		4> 返回分页列表的存储过程
+			===== 存储过程 =====
+				create or replace procedure proc_testd(param_pageSize in number, param_page in number, param_result out test_cursor_package.test_result_cursor)
+				as
+				begin
+					open param_result for 
+					select 
+						B.*
+					from 
+						(select A.*, rownum rn 
+							from (select * from test_student order by id) A 
+							where rownum < param_page * param_pageSize
+						) B 
+					where 
+						B.rn >= (param_page - 1) * param_pageSize;
+				end proc_testc;
+			===== 调用 ===
+				try {
+					getConnection(url, name, password);
+
+					CallableStatement cstmt = connection.prepareCall("{ call proc_testd(?, ?, ?) }");
+					cstmt.setInt(1, 3);
+					cstmt.setInt(2, 2);
+					cstmt.registerOutParameter(3, OracleTypes.CURSOR);// oracle 游标类型
+
+					cstmt.execute();
+					ResultSet resultSet = (ResultSet) cstmt.getObject(3); // 获得结果集
+
+					while (resultSet.next()) {
+						System.out.println(resultSet.getInt(1) + ", " + resultSet.getString(2) + ", " + resultSet.getString(3));
+					}
+
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+
+2: oracle中的锁
+	(1) 锁的分类
+		排它锁, 共享锁
+		行级锁, 表级锁
+		隐士锁, 显示锁
+		
+	(2) 行级锁
+		1> 行级锁是一个排它锁, 当一个事务对某个行进行枷锁, 那么其他事务是不能在继续枷锁的.
+			在进行updata, delete, insert, select .. for update,语句的时候, 会自动枷锁
+			当提交事务, 或者是回滚事务的时候自己接触锁
+		
+		2> select .. for update的测试
+			当一个事务在执行select... for update 语句的时候,
+			其他事务
+				update语句, 是不能执行的, 进入到阻塞状态.
+				delete语句, 也是不行的.
+				insert语句, 是可以进行插入的.
+				select..forupdate语句, 不行,
+				这就证明是行级锁是排他锁.
+				
+		3> wait 5, no wait
+			当一个事务操作的时候, 其他事务不能进行操作, 只能无限的等待.
+			那么这个时候就可以使用wait 8, 或者是no wait语句来控制等待时间, 和不等待.
+			
+	
+	(3) 表级锁
+		lock table table_name in  row share mode;
+
+	
+	
+	(4) 如何查看锁对象
+		select * from v$locked_object
+		select * from dba_object;
+		select * from v$session;
+
+		====== 手动接触死锁 ===
+		QL> select object_id,session_id from v$locked_object;  //注意session_id 就是上锁的 session标志
+		SQL> select username,sid,SERIAL#  from v$session where sid=。。;      //这里的SID = session_id 
+		SQL> alter system kill session 'id,serial#';     //杀死该session
+
+3: oracle索引
+	(1) 索引的分类, 索引
+		索引: 
+			类似于书的目录结构
+		索引分类:
+			索引按照数据结构分为: 位图索引, Btree索引
+			bTree索引又分为: 单列索引, 组合索引, 函数索引, 反向索引
+	
+	(2) 索引的结构以及好处
+		索引的结构是bTree结构:
+			rowid, 存储了row在数据文件中的具体位置.
+			root
+			branch branch ...
+			leaf...
+			rowid...
+		
+		索引的好处:
+			索引直接指向查询行, 减少了磁盘io, 提高了sql查询执行效率
+			
+		索引的缺点:
+			当对数据进行插入, 删除, 修改的时候, 数据库会自动维护索引.
+
+	(3) 索引使用
+		1: 创建索引
+			create index index_name on table(column)
+			
+		2: 重新构建索引
+			alter index index_name rebuild;
+		
+		3: 删除索引
+			drop index index_name;
+		
+4: pl/sql编程
+	
+	BEGIN
+		-- 循环插入
+		FOR i IN 1..15000
+		LOOP
+		   INSERT INTO test_student(id, name) VALUES ( i, "0000" || i);
+		END LOOP;
+		-- 输出语句
+		dbms_output.put_line(' 成功录入数据！ ');
+		COMMIT;
+	END;
+
+	
+5: github代码库的建立
+	1> 创建账号
+		https://github.com
+
+	2> 建立repository代码库
+		
+	3> 下载github客户端 
+		http://msysgit.github.io/
+	
+	4> 打开git-bash
+		0> 设置用户名和邮箱地址。这两个值是作为上传时记录的值。输入命令
+			git config --global user.name "用户名"
+			git config --global user.email "邮箱"
+		1> 创建一个git代码仓库文件
+		
+		2> 初始化代码仓库
+			git init
+		3> 将项目放到仓库中, 将纳入git的版本控制中
+			git add .
+		4> 将所用更新存放到本地缓存中, 等待上传
+			git commit -m "注释"
+		5> 链接远程仓库
+			// 增加远程服务器端
+			git remote add origin ""https://github.com/GitHub用户名/代码仓库名称.git"
+			// 可以通过git remote -v 查看本地链接到的远程仓库
+			// git remote add'命令来增加一个远程服务器端，
+			例如'git remote add origin git://github.com/someone/another_project.git'
+			这条命令就会增加URL地址为'git: //github.com/someone/another_project.git'，
+			名称为origin的远程服务器，以后提交代码的时候只需要使用 origin别名即可
+		6> 从远程仓库中拉去所有的更新
+			git pull origin master
+		7> 将本地缓存更新到代码仓库中
+			git push origin master
+
+6: orcal中如何分析语句的执行效率
+	使用pl/sql中的执行计划来简单查看话费时间.
+	
+
+7: 项目中模拟想ec发送信息
+

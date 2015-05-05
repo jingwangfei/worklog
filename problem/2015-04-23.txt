@@ -1,0 +1,73 @@
+1: 有那几个项目呢? 各个项目之间的关系是什么?
+
+
+2: 如何来完成一个流程呢?
+
+
+3: 文档? brs的客户端源码, ec_scheduler.jar, connector.jar
+
+
+4: 什么是bboss? 什么是一级bboss枢纽? 什么是二级bboss呢?
+	bboss --> business & operate support system
+	一级bboss --> 全部bboss
+	二级bboss --> 省级bboss
+
+
+5: 什么是ec呢? 
+	ec --> enterprise customer 集团客户
+	集团客户中的使用个人 --> 集团成员
+
+
+6: ec与bboss的关系是什么?
+
+
+
+
+
+7: 一级BBOSS与流量统付EC接口规范v1.3
+
+
+
+
+
+8:
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+		<BizReq>
+			<ReqList>
+				<MobileNo>d</MobileNo>
+				<CARD_PWD>c</CARD_PWD>
+				<Biz_Serial>a</Biz_Serial>
+				<Biz_Time>b</Biz_Time>
+			</ReqList>
+		</BizReq>
+
+
+4: jaxb
+	(1) 将xml文件转换为scheme文件
+		java -jar trang.jar test.xml test.xsd
+	
+	(2) 将scheme文件转为java文件
+		1> 下载jaxb2.0, 进行安装
+		2> 运行 xjc -d . -p com.jaxb.test test.xsd
+	
+	(3) 进行操作
+		// 创建xml元素
+		User user = new User();
+		user.setUEmail("aaa@bb.com");
+		user.setUHometown("山西");
+		user.setUId(7);
+		user.setUMobile(123466);
+		
+		try {
+			// 创建jaxb上下文环境, 利用上下文环境创建配置员
+			JAXBContext jxc = JAXBContext.newInstance(User.class);
+			Marshaller marshaller = jxc.createMarshaller();
+			
+			// 配置员进行配置
+			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+			File file = new File("d://1.xml");
+			marshaller.marshal(user, file);
+			marshaller.marshal(user, System.out);
+		} catch (JAXBException e) {
+			e.printStackTrace();
+		}

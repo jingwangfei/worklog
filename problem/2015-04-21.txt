@@ -1,0 +1,158 @@
+1：	
+	看帮助文档
+	从现在开始, 鞋代码, 使用框架的时候, 如果遇到了不明确的一些知识的时候, 首先去看文档.
+	而不是去网上搜东西, 因为这些东西也是他们看文档然后加上自己的理解的. 各有不同, 可能有些是错误的.
+	因此, 开始穿一手鞋...
+	
+	在做如果连做梦都在干事情, 那是多么美好的呢
+	
+	项目经理, 其实就是与人打交道.
+
+2: linux安装apache服务器
+	使用rpm安装httpd软件:
+
+
+	启动/关闭/重启httpd软件:
+	
+	
+	apacheweb服务器的目录结构:
+	
+	
+	各个配置文件的详解:
+	
+
+3: jdk1.5中的线程并发库中的lock类
+	(1) lock的作用
+		lock的作用和synchronized的作用是一样, 都是为了线程同步, 保证代码的原子性
+		在执行a线程的时候, 不能执行B线程
+	
+	(2) lock 与 synchronized比较
+		lock更加面向对象, 直接提出了锁的概念
+		
+	(3) lock的使用
+		lock的体系结构
+			Lock<I>
+				ReenTrantLock
+				readLock
+				WriterLock
+			
+		lock中的核心方法
+			lock
+			unlock
+		
+
+4: js中的闭包
+	(1) js中的变量的范围, 作用域
+		函数作用域:
+			js中并没有 块作用域:
+				var tt = 'aa';
+
+				if(true){  
+					var tt = "local";  
+					alert(tt); // local
+				};
+				
+				alert(tt); // local
+			函数作用域: 变量在函数内都是定义了的.
+				var tt = 'aa';
+
+				function aa(){  // 函数中使用的变量都是经过定义的. 因此在作用域链中会找到
+					alert(tt); // local, 注意这里也分是不是全局变量
+					var tt = "bb"; // tt = 'bb'; 的结果是不同的
+					alert(tt);
+				};
+				
+				aa();
+				alert(tt); // local
+		
+		变量作用域:
+			局部变量:
+				在函数内部通过var声明的变量就是局部变量
+			全局变量:			
+				在函数外部声明的变量
+				在函数内部没有var声明的变量
+		
+		作用域链: 
+			作用域链其实也是对象链,
+			一层一层向上进行查找. 如果有定义那么就会获得, 如果没有就会继续向上查询. 直到都没有
+			则 undefined
+			嵌套函数作用域 --> 外部函数作用域 --> 全局作用域
+				
+				function buttonInit(){  
+					for(var i=1;i<4;i++){  
+						var b=document.getElementById("button"+i);  
+						b.addEventListener("click",function(){ alert("Button"+i);},false);  
+					}  
+				}  
+				window.onload=buttonInit;  
+				
+				当注册事件结束后，i的值为4，当点击按钮时，事件函数即function(){ alert("Button"+i);}这个匿名函数中没有i,根据作用域链，所以到buttonInit函数中找，此时i的值为4，所以弹出”button4“
+		
+	(2) 闭包为什么出现呢? 它主要是为了解决什么问题呢?
+		在一般情况下, 在函数外是不能访问函数内的局部变量的呢.
+		如果我就想在函数外访问函数内的局部变量, 那么该如何做呢?
+		
+		由于函数中的嵌套函数, 能访问函数中的所有变量, 我们可以通过直接返回
+		嵌套函数来在函数外部访问函数内部的变量.
+		
+		这就其实就是闭包
+	
+	(3) 什么是闭包呢?
+	
+		闭包是: 返回嵌套函数, 为了函数外部能访问函数内部的变量
+	
+	(4) 闭包的时候
+		
+		function aa() {
+			var a = "aa";
+			return function() {
+				alert(a);
+			};
+		}
+		
+		bb = aa();
+		
+		bb();
+		bb();
+
+	(5) 闭包的坏处:
+		闭包太占用内存了, 以为在外部有变量引用了内部函数, 导致了内部函数不能释放,
+		内部函数不会释放, 就导致了父函数也不能释放内存, 这会导致内存大量存在
+	
+	(6) 函数声明 和 函数表达式
+		通过function来声明函数
+		通过()是函数变为函数表达式
+		
+		
+	(7) 匿名函数都是指向window对象的
+		全局变量, 全局函数都是属于window对象的.
+		匿名函数也是属于window对象的.
+		this指向的是运行该代码的对象.
+	
+		var myObject = {
+  			num: 2,
+  			add: function() {
+  				this.num = 3;
+  				(function() {
+  					alert(this.num); // undefined, 这里的this对象指向的是window对象, 匿名函数是属于window对象的.
+					this.num = 4;
+  				})(); // 函数表达式
+  				alert(this.num); // 3, 这里的对象指向的是myObject对象
+  			}
+  		}
+  		myObject.add();
+
+
+5: 如何使用Java编程语言实现缓存数据, 并且缓存的数据的有效期为30分钟
+
+
+6: Java动态代理模式的底层实现原理
+	(1) 利用反射动态组装代理类, 生产.Java文件, 生成的类的名称为$proxy+数字
+	(2) 将.Java文件编译为.class文件
+	(3) 将class文件加载到内存中
+
+7: 如果一个网站同时登陆在线用户量比较大, 容易导致项目假死或服务器宕机, 如果解决呢?
+
+8: 如果让你实现一个tomcat服务器, 如何实现session机制
+
+9: 

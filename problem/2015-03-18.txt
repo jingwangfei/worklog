@@ -1,0 +1,98 @@
+1: linux文件以及目录权限
+	(1) 文件权限 和 目录权限
+		文件权限: 
+			一个文件具有 r(可读权限) w(可写权限) 但是没有x(可执行权限)
+			r: 可以用cat查看文件内容
+			w: 可以使用vim编辑器来编辑文件
+			x: 文件没有可执行权限
+		
+		目录权限: 
+			一个目录具有 r w e权限
+			r: 可以私用ls查看这个目录下的所有文件
+			w: 可以创建, 删除该目录下的文件
+			e: 可以使用cd命令来进入该目录
+	
+	(2) 如何查看一个文件或者是一个目录的权限呢?
+			标准命令: ls - l
+			centos: ll 也可以查看权限
+			
+	(3) 权限的字符表示法和数值表示法
+				所属主			所属组			其他用户
+		扁丝:	r	w	e		r	w	e		r	w	e
+		字符:	u+r	u+w u+e		g+r g+w g+e		o+w o+w o+e
+		数值: 	4	2	1		4	2	1		4	2	1	--> 这个方式跟我们项目中采用的权限实现是一样的
+		
+	(4) 如何修改一个文件获得是目录的权限呢?
+		chmod 修改文件权限
+			chmod u+wre filleName	修改文件具有读写权限
+			chmode 7 fileName		修改文件的权限
+		chgrp 修改文件所属组	
+			chgrp	userName:GroupName fileName 修改文件所属主和所属用户
+			
+		chown 修改文件的所属用户
+	
+	(5) 其他特殊权限
+		....
+
+2: orcal事务的隔离级别
+	(1) 用java代码模拟什么是事务
+		A用户转正到B用户, 这就是一个事务, 不能分割, 其实在java代码中, 或者是现实生活中有很多这样的例子
+		都是具有事务特性的呢
+	
+	(2)	sql92标准的事务隔离级别
+					脏读		不可重复读		幻读
+				
+		读未提交	√			√				√
+		
+		读已提交	×			√				√
+		
+		可重复读	×			×				√
+		
+		序列化		×			×				×
+		
+	(3) 在orcal中的事务的隔离级别
+		orcal仅仅具有3种事务隔离级别: 
+			read-commited
+			serializable
+			read-only
+			
+	(4) 在orcal中设置事务的隔离级别:
+		set transaction isolation level read_commited;
+		set transaction isolation level serializable
+		set transaction read only
+
+3: 各个表的详细信息
+	SID ORDER_RELATION.SERVICE_ID
+	单号 SERVICE_HANDLE_ORDER.ORDER_ID
+	订购关系ID ORDER_RELATION.RELATION_ID
+	集团客户名称 ORDER_RELATION.EC_NAME
+	主办省 ORDER_RELATION.PROV_ID
+	SID配置信息 ORDER_RELATION.SERVICE_INFO
+	========================  ==========================
+	SERVICE_HANDLE_ORDER
+		单号			SERVICE_HANDLE_ORDER.ORDER_ID
+		
+	ORDER_RELATION
+		SID 			ORDER_RELATION.SERVICE_ID
+		订购关系ID 		ORDER_RELATION.RELATION_ID
+		集团客户名称 	ORDER_RELATION.EC_NAME
+		主办省 			ORDER_RELATION.PROV_ID
+		SID配置信息		ORDER_RELATION.SERVICE_INFO
+	
+5: 系统重装
+	jdk + myclipse + tomcat + 360 + plsql + orcal + ERstudio + vpn + feiixin + pdf + qq + notepad
+	
+	360  feiixin  notepad
+	
+	myclipse 
+
+6: 表之间的关系
+	用户表
+			---
+	受理单表
+			---存放用户的业务
+	订购关系表	
+			---存放用户的最新业务
+			
+	
+

@@ -1,0 +1,224 @@
+1: 	如何分析Java的内存占用情况呢?
+		1> 使用jdk自带的jconsole命令, 可以查看Java内存的使用情况
+	
+		2> 先用jmap导出服务器端的jvm的堆dump文件，然后再用jhat，或者jvisualvm，
+			或者eclipse内存分析器来分析内存状况。
+
+	如何解决Java heap内存溢出呢?
+		在内存中尽量少使用大容量 容器.	
+	
+	
+	jvm的大体结构是什么?
+		什么是jvm?
+			jvm --> java virtual machine Java虚拟机, 它同普通电脑一样, 具有内存
+					指令集, 寄存器, 但是他是一个虚拟机器. 不是真正存在的.仅仅是概念上的机器.
+		
+		jvm的作用是什么?
+			1> jvm的最重要最用是执行Java程序.
+				当一个Java程序启动的时候, 就会创建一个jvm, 当程序结束的时候, 这个jvm就会销毁.
+				
+			2> jvm是Java跨平台运行的保证.
+				jvm疲敝了 各个操作系统的详细信息. 是Java直接在jvm上运行, 做到了夸平台.
+		
+		
+		jvm的组成部分?
+			1> jvm有4大重要部分组成:
+				java memory assolaction area --> java内存分配区
+							---> 这个就是我们通常所说的Java内存
+				carbage collection ---> gc子系统
+							主要负责, Java heap 区域的垃圾回收
+				classloader sub-system --> 类加载子系统
+							---> 用来将class文件, 加载到内存中
+				exection engine --> 执行引擎
+							---> 用来执行指令
+							
+			2> java memory assolaction area(java 内存) 又有以下部分组成:
+				 method area ---> 方法区
+							用来保存类的信息, 常量的信息, 静态变量的信息. 
+							这个区域是线程共享的区域.
+							
+				program count register --> 内存计数器
+							用来记录将要被执行的下一条指令地址.
+							每个线程会有不同的计数器.
+							
+				stack ---> 栈
+							用来执行方法, 当执行一个方法的时候, 会想栈中压人一个栈帧.
+							每个线程都有不同的栈
+							
+				heap ----> 堆
+							用来保存创建的对象. 
+							
+			3> heap 区域又分为:
+				
+				yough generation (新生代) 
+						eden区 --> 新生区
+								新创建的对象将被保存在eden区
+						survivior区 --> 幸存区
+							from space  
+							to space
+				old generation ( 年老带) 
+						--> tenuread space 年老区
+				
+				permanet generation (持久带)
+						---> 这里所说的持久代其实就是我们所说的方法区
+							
+			
+		设置Jvm内存命令:
+			-Xms -- 设置堆内存初始大小
+			-Xmx -- 设置堆内存最大值
+			-Xss --设置方法栈的最大值
+			-XX:PermSize --设置Perm区的初始大小
+			-XX:MaxPermSize --设置Perm区的最大值
+			-Xmn -- 设置新生代内存大小。
+			-XX:SurvivorRatio -- 设置Eden与Survivor空间的大小比例
+						
+
+2: 错误:
+	 identifier of an instance of com.aspire.doms.hibernate.po.BureauData was altered from 1 to 100
+	
+
+3: 项目总结:
+		项目是如何对list进行封装的呢?
+			是如何对分页进行封装呢?
+			是如何对查询条件进行封装的呢?
+			是如何对显示列表进行封装的呢?
+			是如何封装操作的呢?
+			是如何对排序进行封装的呢?
+			
+		如何进行批量上传呢?
+			如何使用struts2来上传文件
+			如何将文件内容封装到map中
+			如何进行hibernate批量插入
+		
+		如何进行下载呢?
+			Content-Type: application/octet-stream (八进制数据流, 用来下载数据)
+			Range: bytes=500-599   表示读取该文件的500-599字节，共100字节
+			Range: bytes=500-      表示读取该文件的500-999字节，共500字节。 
+
+		数据库:
+			数据库中视图的详解?
+				什么是视图:
+					视图是基于一个表, 或这是多个表, 或者是其他视图的逻辑表.
+					我们可以通过视图来操作和查询基表中的数据.
+					--> 对于简单视图(也就是基表是一个表)我么可以进行dml
+						但是对于复杂视图, 我们不能进行dml语句
+				
+				视图的好处:
+					视图可以简化复杂查询, 提高查询效率:
+						我们可以将复杂查询存储为一个视图, 然后直接查询这个视图就可以. 这样可以大大简化复杂查询	
+						并且, 视图都是讲过数据库的预解析的, 还可以大大提高查询效率
+						
+					视图可以提高安全级别:
+						在orcal中我们我们可以指定某个用户可以访问,某个表, 
+								--> grant select on table_name to user_name
+						但是不能指定某个用户访问一个表的中某些列.
+								那么这个时候就可以通过视图来赋值权限.来控制某个表中的某些咧的权限.
+								
+				视图的使用:
+					create view view_name as select...  --->  创建一个视图
+					drop view viwe_name --->删除视图
+					slect * from view_name --> 查询数据
+					在项目中我们可以采用表映射的方式, 直接映射视图, 但是视图没有主键.
+					
+				
+			orcal中的锁详解?
+				
+			如何查看表是否被锁定了呢?
+				
+			如何修改主键?
+				操作约束:
+					alter table table_name add constraint f --> 添加约束
+					alter table table_name drop constraint --->删除约束
+				
+				操作列:
+					alter table app_user add column ... --> 添加列	
+					alter table table_name drop column ..
+					alter table 表名称 modify column 字段名称 字段类型 [是否允许非空];
+					
+				
+			序列?
+				序列是一个顺序增长的存储器, 我们可以使用序列来进行主键的设置.
+				
+			如何解决orcal的乱码问题?
+				select * from v$nls_paramters --> orcal数据库编码
+				select userenv('language') from dual --> orcal客户端编码
+				
+			orcal系统视图:
+				orcal的系统视图都是以v$开头的.
+				
+			orcal分页查询:
+				
+				
+			orcal修改语句:
+					修改表结构
+						alter table self_opinion_reply modify content varchar2(500);
+						alter table self_opinion_reply add content varchar2(500);
+					添加约束
+						alter table self_opinion_reply add constraint pk_name primary key id;	
+						
+				
+		hibernate:
+			Criteria查询
+			
+		
+		struts2:
+			redirectAction跳转类型
+			
+			struts2标签详解
+		
+		其他:
+			apache基金会中GetMethod 和 HttpClient项目
+			
+			如何反向生产实体 以及 dao
+				
+			map中key本来是没有顺序的, 如果想要根据map的key来进行排序, 可以使用treeMap来进行实现
+				treeMap按照key来进行排序
+			
+			如何控制事务
+
+
+4: 需求分析 --> 意见建议
+
+	(1) 项目总体分析
+		这个项目大体是干什么的? 包含哪些核心模块?
+	
+	(2) 大模块分析
+		我要做的这个大模块是干什么的? 又包含哪些小模块?
+	
+	(3) 小模块分析
+		我要做的这个小模块是干什么的? 
+		业务流程是什么? (其中最重要的是按照数据线来进行分析)
+		页面是什么样子的呢? (模拟情景)
+		
+
+	(4) 功能分析
+	
+	
+	
+
+5: 如何设置jsp格式化行款
+	myeclipse --> jsp ---> jsp source --> html source --> line width 
+
+
+
+
+
+6: 问题:
+	(1) 2.1.1.10 意见建议展示信息页
+			1>	页面展示哪些内容? 有哪些操作呢?
+			
+	(2) 2.1.1.11 意见回复展示信息页
+		
+			1> 	意见回复信息页展示，点击提交后，列表页状态变更为已回复，但可以再次回复。
+				在此回复是什么意思? 
+			
+			2> 	第一次回复时, 页面展示哪些内容?
+				第二次回复时, 页面展示哪些内容?
+				....
+
+
+
+
+
+
+

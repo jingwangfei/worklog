@@ -1,0 +1,192 @@
+1: 事务并发产生的问题: 
+		丢失更新
+			---> 本质是: 写写冲突; 解决方法是: 一个一个的写.
+		脏读
+			---> 本质是: 写读冲突; 解决方法是: 先写再读
+		不可重复读
+			---> 本质是: 读写冲突; 解决方法是: 先读后写
+		幻读
+			---> 本质是: 读写冲突; 解决方式是: 先读后写
+		
+		----模拟事务并发
+
+2: linux操作系统的基本命令
+	命令的基本格式:
+		cmd [options]... [paramters]...
+		
+	通配符:
+		*: 任意数目, 任意类型
+		?: 一个数目, 任意类型
+		[]: 选择一个
+	
+	帮助命令:
+		--help
+		man
+		info 
+		
+	文件命令
+		file ---> 根据内容判断文件的类型
+		touch ---> 创建新文件
+		rm ---> 删除文件
+		cp --> 复制文件
+		mv ---> 移动文件
+	
+	目录命令
+		mkdir ---> 创建目录
+		rmdir ---> 删除目录
+		
+	查看命令
+		ls
+		tail
+		head
+		more 
+		less
+	
+	基本命令
+		cd 
+		pwd ---> 查看当前所在目录
+		
+	用户命令
+		logout
+		shutdown 
+		reboot
+	
+3:	orcal数据库锁详解
+	隐含锁
+	显示锁
+	排它锁（X）
+	共享锁 (s)
+	ORACLE只读事务
+	事务一致性的级别
+
+4: 以数据流转的方式重新看了一下业务流程.
+	
+	具有什么数据?
+		
+		
+	数据处理过程是什么?
+		数据从哪里来    ---->  数据进过了哪些处理 -----> 数据处理的最后结果是什么
+		
+
+	ESOP系统  ---> 中国移动集团客户业务综合运营平台
+	bboss系统 ---> BOSS（Business & Operation Support System，BOSS）指的是业务运营支撑系统。
+	doms系统 ---> 中国移动流量管理系统
+
+	
+	esop ---> bboss ----> doms
+		
+	预处理单
+			
+		预处理单
+			bboss ---> doms
+		
+			---- doms处理流程 ---
+				运营审批 ---> 卓望运营人员审批 ---> 集团处世审批 --> 市场部领导审批 ---> bboss处理
+				
+			--- 结果 ---
+		
+	业务流程图
+	生命周期图
+	功能图
+		
+5: 核心操作有哪些呢?
+	
+	criteria查询
+			Criteria criteria = getSession().createCriteria(UnknownError.class);
+			criteria.add(Restrictions.eq("", ""));
+			criteria.addOrder(Order.asc("aa"));
+			criteria.setFirstResult(1);
+			criteria.setMaxResults(20);
+			criteria.uniqueResult();
+			List<Object> list = criteria.list();
+
+	redirectAction
+			<result name="success" type="redirectAction">  
+				<param name="actionName">viewCampaignDetail</param>  
+				<param name="campaignId">${campaignId}</param>  
+			</result>  
+	
+	
+	<s:property>的取值顺序
+		1,访问Action值栈中的普通属性：
+			s:property value="attrName"/>
+
+		2,访问Action值栈中的对象属性(要有get set方法)：
+			<s:property value="obj.attrName"/>
+			<s:property value="obj1.obj2.attrName"/>
+
+		3,访问值栈中对象属性的方法
+			<s:property value="obj.methodName()"/>
+		
+		4,访问值栈中action的普通方法：
+			<s:property value="methodName()"/>
+		
+		5,访问静态方法：
+			<s:property value="@com.softeem.LoginAction@methodName()"/>
+		
+		6,访问静态属性：
+			配置属性文件，允许ognl访问静态方法struts.ognl.allow...=true
+			<s:property value="@com.softeem.LoginAction@attrName"/>
+			
+		7,访问Math类的静态方法：
+			<s:property value="@@min(9,7)"/>
+		
+		8,访问普通类的构造方法：
+			<s:property value="new com.softeem.User(2)"/>
+		
+		9,访问集合：
+			①list集合对象
+			<s:property value="listName"/>
+			②list集合中的某个元素
+			<s:property value="listName[1]"/>
+			③list中某个属性的集合
+			<s:property value="listName.{field}"/>
+			④list中某个属性集合的特定值
+			<s:property value="listName.{field}[0]"/>
+			⑤访问set
+			<s:property value="setName"/>
+			⑥访问set中某个元素
+			<s:property value="setName[0]"/>
+			⑦访问map
+			<s:property value="mapName"/>
+			⑧根据key访问Map中的元素
+			<s:property value="mapName.username"/>
+			<s:property value="mapName['username']"/>
+			<s:property value="mapName[/"username/"]"/>
+			⑨访问map中所有的key
+			<s:property value="mapName.keys"/>
+		10,访问map中所有的values
+			<s:property value="mapName.values"/>
+		
+		11,访问map的大小
+			<s:property value="mapName.size()"/>
+		
+		12,投影
+			<s:property value="listName.{?#this.age==1}"/>
+			<s:property value="listName.{^#this.age>1}"/>
+			<s:property value="listName.{$#this.age==1}"/>
+			<s:property value="listName.{$#this.age==1}.{age}==null"/>
+			[]:<s:property value="[0]"/>值栈中的对象
+
+		13,取到list中满足条件的开头的一个元素的密码:
+			<s:property value="users.{?#this.username='张三'}.{password}[0]"/><br>
+		
+		14,取到list中满足条件的最后的一个元素的密码:
+			<s:property value="users.{$#this.username='张三'}.{password}"/><br>
+		
+		15,<s:property value="users.{$#this.username=='admin'}.{group}==null"/><br>
+		
+		16,从栈顶开始取,一直取到指定的位置(0表示栈底):
+			<s:property value="[1]"/>
+			<s:debug></s:debug>
+
+
+
+6: 问题:
+	(1) orcal中的锁详解
+
+	(2) apache基金会中GetMethod 和 HttpClient项目
+	
+	(3) struts2标签详解
+		
+	

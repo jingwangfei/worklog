@@ -1,0 +1,113 @@
+1: linux系统中利用RPM进行软件的安装.
+	有些系统中, 并不支持YUm安装软件. 
+	支持RPM安装软件.
+	
+	RPm安装软件如yum安装软件的区别?
+	
+		PRM 需要关注软件之间的各种依赖关系, 但是他可以不进行联网
+		YUM 不需要关注软件之间的依赖关系, 必须进行联网, 
+			yum安装软件, 必须在软件仓库中有对应的软件,不然只能使用RPM.
+			
+	RPM的命令:
+		rpm -ivh ...安装软件
+		rpm -e ...卸载软件
+		rpm -U ... 更新软件
+		rpm -qa ... 查看软件
+		
+	使用RPM安装vsftpd软件
+		1> 讲rpm包上传到linux系统中
+			linux系统同Windows系统交互 --> 可以使用winscp软件, 进行文件的传递
+			
+			如何查看linux的版本信息
+				lsb_reseal -a
+			
+			如何查看linux的ip地址
+				ifconfig中的eth0下的inter addr..
+			
+		
+		2> 使用rpm命令安装软件
+		
+	
+
+2: 
+
+
+
+3: beanutils, propertyutils, fields, methods, 
+	
+	fields与propertyUtils
+		field类, 优点:
+						具有非常全面的访问方法, 包含属性的各个部分
+				
+				 缺点:
+						如果是稀有属性, 不能直接进行访问属性.
+		PropertyUtils
+				优点: 
+						能获得get, set方法, 能访问属性
+						
+				缺点:
+						不能获得其他信息
+					
+		propertyUtils与beanutils
+			propertyUtils中包含了beanutils中的所有方法, 出了populate
+			并且propertyutils中可以获得所有的属性.
+
+
+
+4: 
+	method类:
+		修饰符:
+			getModifiers()的返回值?
+			Modifiers类中的已经定义了不同修饰符的数字.
+			是2的次数./
+			如果有多个修饰符, 那么久相加.
+
+		泛型信息: 
+			method.getGenericReturnType() --> 带泛型的返回类型, 注意这里是带
+					java.lang.Class<java.lang.String>
+			
+				
+			method.getReturnType() --> 不带反省的返回类型
+					class java.lang.Class
+				
+		
+		泛型:
+			不同的泛型, 在编译的时候,  
+					
+					(1)			()2)
+				java ---> class ----> jvm	
+			
+				(1) 编译: 将java编程成类的字节码
+				(2) 运行: 将class装载到jvm中
+			不同的泛型在编译的时候, 会编译成不同的字节码, 但是在运行的时候, 将字节码装载到jvm中
+			会将泛型信息擦除. 只保存一份.
+			
+			这就是为什么不同的泛型信息, 不是重载.
+			但是我们又可以获得泛型信息.
+		
+	declared:
+		declared是声明的, 不包含继承自父类的信息.
+		
+		
+			
+	类的字节码:
+		System.out.println(Date.class == Date.class); ---> true
+		这个代码证明了在jvm中类的字节码就只有一份
+
+	ParameterizedType是什么呢?
+		Type 所有类的父接口
+		ParameterizedType ---> 参数化类型, 也就是class<String> 这种类型
+		ArrayType --> 数组类型
+		WildcardType ---> 通配符类型 ?
+
+		
+5: 
+	
+
+
+
+
+
+
+
+6: 

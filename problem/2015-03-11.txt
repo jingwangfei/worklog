@@ -1,0 +1,66 @@
+1: 整体有那些系统, 各个系统之间的关系是什么呢?
+	
+
+2: 核心系统的大体业务是什么呢?
+	
+
+3: 开发工具
+	这个到没有规定, 只是说, 自己要去下载一些插件.
+
+4: 一些关键字的意思?
+	统付 --> 统一支付
+	ec ---> 电子商务
+	
+5: 如何看一个项目呢?
+	这个项目的有那几个模块? 
+	指定某个模块
+		包的结构体系是什么呢? 
+			com.aspire.web.模块.action 
+			....service
+			....dao
+			...
+		action,service,dao..层的类体系结构是什么?
+			action继承自listViewAction
+			service继承自 commonservice
+			dao继承自DomsBaseHibernateDAO
+			
+			
+		开发的风格是什么呢?(方法的名称是什么)
+			toAdd() --> add页面
+			add() ---> 添加方法
+			list ---> 列表页面
+			toEdit ----> 修改页面
+			edit ---> 修改
+			toView --> 详情页面
+			
+			
+6: 如何控制事务的呢?
+
+
+7; listViewAction commonlistView的源码
+	
+	list方法源码
+	
+
+9: 	apache tiles
+		--- 可重复使用页面布局
+	dwr 
+		--- ajax框架	
+	
+	事务体系
+	
+	service如何创建带事务的代理对象
+	
+	service是唯一service
+		private CommAnnouncementService service = CommAnnouncementService.getInstance();
+			----- 唯一service
+			
+	dao中方法编写的格式
+		注意: 日志, 异常, 常量
+		
+		
+		CommAnnouncementDAO中的
+				attachDirty()方法有什么作用
+				attachClean()方法有什么作用
+				
+	dao, service, action中的基类原代码

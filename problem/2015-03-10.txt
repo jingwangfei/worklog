@@ -1,0 +1,120 @@
+1: static 关键字修饰基本类型
+	所有对象实例共享静态属性
+
+2: final关键字修饰基本类型 
+	final类型的变量是指，变量指针不变
+
+=== 基本类型是存放再内存中的常量池中 ===
+
+3: vector是线程安全的数组列表
+
+
+4：如何避免线程安全的问题呢？
+	有2种基本思路：	第一种是保证某一时刻，有且只有一个线程运行
+			第二种是多个线程中有个对应的本地变量
+
+5：mysql中的存储过程
+	什么是存储过程?
+		存储是一种函数
+
+	它的作用是什么?
+		 效率高: 存储过程是预编译的sql语句.不需要进行编译
+		 共享性: 不同的程序, 不同的平台都调用同一个存储过程
+
+	如何创建存储过程? 如何使用? 删除? 修改?
+		创建:
+			delimiter //
+			create procedure simpleproc(out a int)
+			begin
+				select count(*) into a from t_role;
+			end
+			//
+			delimiter ;
+		
+		调用:
+			set @a = 1;
+			call test_in_param(@a);
+			
+		修改:
+			alter procedure ...
+
+		删除?
+			drop procedure ..;
+			
+
+	存储过程中的控制语句:
+		条件语句
+			if... then... elseif...then.. else .. endif
+			case... when... then... when... then... else... end case
+		
+		循环语句
+			while... do... end while
+
+		变量声明语句
+			declare var_name var_type default value		
+		
+	
+			delimiter //
+			create procedure if_while_proc(in a int)
+			begin
+				if a = 0 then select 0;
+				else select 2;
+				end if;
+			end;
+			//
+			delimiter ;
+
+
+
+	在java程序中如何调用存储过程呢?
+
+
+	
+	
+
+6: mysql中的索引
+
+
+
+
+7: mysql中的函数
+
+
+
+
+8: mysql中的视图
+
+
+
+9: mysql中的@是什么意思呢?
+	mysql中的@是用户变量的标示.
+	
+	用户变量的作用是什么呢?
+		在2个语句之间传递数据.
+
+	用户变量的作用范围是什么呢?
+		用户变量仅仅是属于某一用户的, 当这个用户退出的时候, 那么该用户下的所有用户变量将销毁.
+
+	如何给用户变量进行赋值?
+		1: 使用set语句为用户变量赋值
+			set @a = 1;
+		2: 使用where语句为用户变量赋值
+			select @a := 2;
+		3: 使用into关键字给用户变量进行赋值
+			select count(*) into @a
+
+10: 存储过程中的参数 out是什么意思呢?
+	输出参数: 传递的是地址, 可以进行改变
+	输入参数: 传递的是内容, 不可以进行修改
+	
+
+12: mysql中的注解:
+	单行注解: --
+	多行注解: /* */
+	
+
+13: 树的遍历
+	非递归遍历中最重要的是什么呢？
+
+	
+

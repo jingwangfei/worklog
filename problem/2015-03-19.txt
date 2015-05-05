@@ -1,0 +1,83 @@
+1: linux系统的查找命令:
+	which:
+		在系统环境变量path指定的路径下查找特定的可运行程序
+		注意: 1: 在path指定的路径下查找 2: 查找可运行程序
+		
+	whereis
+		在系统whereis数据库中查找对应的文件信息
+		1: 在whereis数据库中查询 2: 查询的包含可运行程序, 说明文档等
+		
+	
+	locate: 
+		在系统中进行模糊查询, 会讲系统所有有关的信息查询出来
+	
+
+
+2: 如何保证orcal数据的完整性呢?
+	约束:
+		not null, uniqe, primary key, check, foregn key
+
+
+3: 创建表, 以及反向成实体
+	
+	create table bureau_data(
+		id number(9) primary key, --序号
+		valid_time date, -- 生效时间
+		invalid_time date, -- 失效时间
+		service_id varchar2(20), -- 业务编码
+		cmnet_code varchar2(100), -- 爱立信cmnet业务编码
+		service_full_name varchar2(100), -- 业务名称
+		service_name varchar2(100), -- 业务命名
+		province varchar2(100), -- 制作范围
+		use_type varchar2(100), -- 使用方式
+		apn varchar2(100), -- 接入apn
+		ip varchar2(100), -- 三层目的IP地址
+		flow varchar2(100), -- 三层FLOW命名
+		protocal_num varchar2(100), -- 协议号
+		port varchar2(100), -- 四层目的端口号
+		url varchar2(100), -- 七层URL
+		host varchar2(100), -- 七层HOST
+		flow_fee varchar2(100), -- 流量费
+		info_fee varchar2(100), -- 信息费
+		user_fee varchar2(100), -- 用户资费
+		remark varchar2(100), -- 备注
+		file_num varchar2(100), -- 局数据文号
+		work_order_num varchar2(100), -- 工单号
+		is_quit varchar2(10), -- 是否退网
+		is_insert varchar2(10), -- 是否插号
+		network varchar2(10) -- 网络标识
+	);
+	
+	
+	insert into bureau_data(id, service_id) values(1, 1000001);
+	insert into bureau_data(id, service_id) values(2, 1000002);
+	insert into bureau_data(id, service_id) values(3, 1000003);
+	
+4: 技术提升
+	(1) 修改主键
+		alter table bureau_data 
+		add constraint PK_tableName
+		primary key id
+
+	(2) map中key本来是没有顺序的, 如果想要根据map的key来进行排序, 可以使用treeMap来进行实现
+		Map<String, Object> map = listMap.get(0);
+		Map<String, Object> sortMap = new TreeMap(new Comparator<String>() {
+			public int compare(String o1, String o2) {
+				return Integer.parseInt(o1) - Integer.parseInt(o2);
+			}
+		});
+		sortMap.putAll(map);
+		Collection<Object> headList = sortMap.values();		
+
+	(3) 创建序列
+		create sequence SEQ_BUREAU_DATA 
+		start with 1
+		increment by 1
+		nomaxvalue
+		nocycle
+		nocache;
+	  
+		  
+	(4) 地址  	
+		http://card.dev.cn:8080/doms_web/bureaudata/bureauData_list.do?listViewName=BureauDataListView
+		<a href="bureauData_list.do?listViewName=BureauDataListView&orderBy=id&ascDesc=desc" class="yellow">局数据列表</a>&nbsp;&gt;&nbsp;

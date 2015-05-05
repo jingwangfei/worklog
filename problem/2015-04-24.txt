@@ -1,0 +1,148 @@
+1: 阻塞队列
+
+	阻塞队列的好处:
+		起到了缓冲的作用
+	
+	什么是阻塞队列:
+		首先它是一个队列, 并且当满, 或者是为空的时候将进行阻塞.
+	
+	阻塞队列的实现原理:
+		在Condition类中有相关的实现代码.
+		class BoundedBuffer {
+		   final Lock lock = new ReentrantLock();
+		   final Condition notFull  = lock.newCondition(); 
+		   final Condition notEmpty = lock.newCondition(); 
+
+		   final Object[] items = new Object[100];
+		   int putptr, takeptr, count;
+
+		   public void put(Object x) throws InterruptedException {
+			 lock.lock();
+			 try {
+			   while (count == items.length) 
+				 notFull.await();
+			   items[putptr] = x; 
+			   if (++putptr == items.length) putptr = 0;
+			   ++count;
+			   notEmpty.signal();
+			 } finally {
+			   lock.unlock();
+			 }
+		   }
+
+		   public Object take() throws InterruptedException {
+			 lock.lock();
+			 try {
+			   while (count == 0) 
+				 notEmpty.await();
+			   Object x = items[takeptr]; 
+			   if (++takeptr == items.length) takeptr = 0;
+			   --count;
+			   notFull.signal();
+			   return x;
+			 } finally {
+			   lock.unlock();
+			 }
+		   } 
+		 }
+
+	阻塞队列的使用:
+		final BlockingQueue<Integer> queue = new ArrayBlockingQueue<Integer>(8);
+
+		for (int i = 0; i < 4; i++) {
+			new Thread(new Runnable() {
+
+				@Override
+				public void run() {
+					while (true) {
+						try {
+							System.out.println(Thread.currentThread().getName() + ": 开始放元素...");
+							Thread.sleep(200);
+							queue.put(new Random().nextInt(100));
+							System.out.println(Thread.currentThread().getName() + ": 放元素结束, 大小为" + queue.size());
+
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			}).start();
+		}
+
+		for (int i = 0; i < 2; i++) {
+			new Thread(new Runnable() {
+
+				@Override
+				public void run() {
+					while (true) {
+						try {
+							System.out.println(Thread.currentThread().getName() + ": 开始取元素...");
+							Thread.sleep(130);
+							System.out.println(Thread.currentThread().getName() + ": 取元素结束, 大小为" + queue.size() + ", 元素" + queue.take());
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			}).start();
+		}
+		
+
+2: 	死锁分为很多种:
+		想互相获得:
+			2个锁, 我想获得你, 你想获得我, 导致了死锁的出现.
+		想获得一个等待中的锁:
+			由于线程进入等待状态, 释放了某个锁, 但是还有另外一个锁没有释放.
+			这导致了其他的线程也进不来, 这就是死锁了.
+	
+	死锁是如何产生的呢?
+		锁嵌套而导致的死锁
+	
+		
+3: 	lock的理解更加深刻 
+		lock是共享资源锁对象的抽象, 
+		它具有lock方法, 这个就相当于关闭门, 然后其他线程都不是操作共享资源的.
+		具有unlock方法, 这个就相当于打开门, 
+	
+	以及condition更加深刻
+		基于某个条件的阻塞,
+		由于满足了某个条件, 那么就会进行阻塞
+		由于满足了某个条件, 那么就会进行运行.
+
+	代码流程
+		多线程的代码流程, 应该注意:
+			原子性操作
+			线程通信
+
+4: 并发集合
+	1> Collections.synchronizedMap ---> SynchronizedMap
+		了解包装设计模式
+		
+	2> ConcurrentHashMap  ---> 里面采用的lock模式
+	
+	3> CopyOnWriteArrayList
+	
+	4> 如果不采用并发库中的集合类的化, 采用传统的集合类
+		在并发的情况下, 出现各种问题呢, 		
+		这都是由于remove方法会修掉size, hasnext方法, 以及next方法
+
+
+
+5: 
+	(1) api, 一定要注意读取第一手鞋
+		最重要的是业务和逻辑, 英语是其次.
+		只要了解了业务和逻辑, 英语一般都是可以才出来的.
+		
+	(2) 多线程编程的代码流程
+	
+	(3) 对自己的代码一定要精益求精, 不要存在一个打一炮, 换一个地方的项目
+		此处不留爷, 自有留爷处
+		
+	(4) 一定要注意设计模式的使用
+		比如, Collections中你的synchronizMap, 就是包装模式来巧妙的解决了一个线程安全的问题
+		
+	(5) 异常的处理方式
+	
+	(6) 新技术的威力 ---> 很吊啊
+	
+		

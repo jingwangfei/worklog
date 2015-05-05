@@ -1,0 +1,138 @@
+1: jax-rs, restful简介
+	jax-rs是jdk6提供构建restful架构的规划, 标准(说白了也就是接口).
+	里面有一系列的注解.
+	
+	restful架构:
+		(1) 资源.(网络资源)
+			网络上的左右资源, 都是资源, 包含图片, 服务, 接口啊...
+			每个资源对应一个uri
+			
+		(2) 表现层(客户端表现层)
+			1> 服务器端仅仅是处理数据, 不负责数据的展示(也就是说, 不说明数据的格式)
+			2> 同一个资源的表现各有不同, 比如, 一段文字, 你可以表现为html
+			统一表现为图片, 或者是xml等等
+			
+		(3) 客户端- 服务器模式
+		
+		(4) http协议
+		
+		(5) 缓存
+			由于服务器端是无状态的, 状态信息是包含哎message中的.
+			因此对于某个请求都是新的, 但是为了提高效率. 
+			这个时候出现了缓存. 通过缓存是存放在代理服务器上的.
+			
+2: jax-rs中的核心注解./
+	@Path --> 标示资源的uri
+	@get, @post, @put, @delete ---> 标示请求的方式
+	@consumes, @produces ---> 标志资源的请求类型, 和 返回类型
+	@PathParam, @queryParam, @formParam ---> 从不同的http部位获得信息
+	
+3: festeasy的简单使用
+
+
+
+4: maven的初次使用
+	1> 下载, 配置maven
+		环境变量中添加m2_home的跟路径.
+		path中添加maven的bin路径,
+	
+	2> mvn的常用命令
+		mvn install
+		mvn clean
+		mvn compile
+		mvn test
+		mvn package
+	
+	3> mvn的文件组织结构 
+		
+		src
+			test 
+				java 
+					..类
+				resources
+			main 
+				java 
+					..类
+				resources
+		target
+			---> 自动生成的目录
+		pom.xml
+		
+	
+	4> mvn中的pom.xml
+		<project> ---->根节点
+		<groupId> ---> 项目名称
+		<artifactId> ---> 模块名称
+		<version> ---> 版本号
+	
+		<dependencies>
+			<dependency>  ---> 依赖包
+
+	5> mvn的jar包仓库
+		mvn首先会从本地jar仓库中找Jar文件, 如果没有则到mv网络库中找文件.
+		
+
+5: uri 和 url的区别
+	
+
+6: Java.net包 网络编程
+	InetAddress
+	Url, Uri
+	UrlConnection, HttpUrlConnection
+	UrlDecoder, URLEncoder 
+	ServerSocket, Socket --> 相当于tcp
+	DataGramSocket, ---> 相当于udp
+	
+
+7: httpClient编程
+
+
+8: resteasy简单使用
+
+
+
+
+9: 网络的基本知识:
+	网路模式:
+		OSI : Open System Interconnect
+			7层模式:
+				应用层, 标示层, 回话层, 传输层, 网络层, 链路层, 物理层
+		
+		tcp/ip: 
+			4层模式:
+				应用层, 传输层, 网际层, 网络接口层.
+	
+	tcp, ip协议:
+		tcp:Transmission Control Protocol
+			建立连接: 3次握手来建立连接.
+					syn报文, syn_ack报文, ack报文,
+			关闭连接: 4次握手关闭连接	
+
+		udp: User Data Protocol
+			在发送数据之间不需要建立连接, 直接发送.
+			
+		tcp与udp:
+			TCP：面向连接、传输可靠(保证数据正确性,保证数据顺序)、用于传输大量数据(流模式)、速度慢，建立连接需要开销较多(时间，系统资源)。
+			UDP：面向非连接、传输不可靠、用于传输少量数据(数据包模式)、速度快。
+			UDP：
+				每个数据报中都给出了完整的地址信息，因此无需要建立发送方和接收方的连接。
+				UDP传输数据时是有大小限制的，每个被传输的数据报必须限定在64KB之内。
+				UDP是一个不可靠的协议，发送方所发送的数据报并不一定以相同的次序到达接收方
+			TCP：
+				面向连接的协议，在socket之间进行数据传输之前必然要建立连接，所以在TCP中需要连接时间。
+				TCP传输数据大小限制，一旦连接建立起来，双方的socket就可以按统一的格式传输大的数据。
+				TCP是一个可靠的协议，它确保接收方完全正确地获取发送方所发送的全部数据。
+	
+	ip和端口:
+		ip, 用来定位地址的; 端口, 用来定位进程的.
+		那个计算机中的那个进程.
+
+			
+10:
+
+
+11: 
+
+
+
+

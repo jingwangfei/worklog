@@ -1,0 +1,115 @@
+1: 
+	查看当前用户所拥有的所有的表:
+		select table_name from user_tables;
+		
+	查看所有用户所拥有的表:
+		select table_name from all_tables;
+		
+	
+	orcal是如何防止脏读? 和 丢失更新的呢?
+	orcal中的一些概念:
+		orcal数据块:
+			什么是orcal数据块:
+				orcal数据块是orcal系统的中最小的逻辑存储单元, 类似于 操作系统中的字节.
+				也就是说, 在读取 和 插入 和 修改的时候, 都是一个数据块进行的.
+				
+			orcal数据块的构成:
+				orcal数据块头: 又由块地址, itl事务槽, 表目录区, 数据目录区
+				空闲区
+				数据区
+			
+		undo数据块:
+			undo数据块它也是数据块, 只是他的作用是同表中的数据块是不同的.
+			undo数据块主要是用来进行 事务回滚, 事务恢复, 读一致性.
+			
+		更新一个表中的某条记录的时候, 数据库做了哪些操作呢?
+			(1) 找到 记录所在的数据块, 分配一个Undo数据块
+			(2) 在undo数据块中:
+					将原来的数据放到undo数据块中
+					分配一个itl事务槽保存当前事务以及数据块的一些信息
+			(3) 在 记录 数据块中
+					分配一个itl事务槽, 
+					在数据头中, 增加锁机制.
+				
+			其他事务
+				读:
+					读的时候回从undo数据块来获得数据, 这就保证了读一致性
+					
+				写: 
+					写的时候, 由于已经在数据头加上了锁, 其他的写事务会等待.
+				
+				这就从物理层面上解决了  丢失更新 和 脏读
+	
+	
+2: 
+	实体设计问题:	
+		类型:
+			数字类型
+				一般对于数值类型字段, 都是采用的是Integer类型, 它最大可以为 21亿.
+				对于自由某些特定值得字段就可以使用Byte类型
+				对于基本数据类型, 都是采用的包装类型.
+			字符类型
+				varchar2最多可以保存2000个字符（1000个汉字, 如果比这个还大, 
+				那么就需要使用Clob, 最大存放8G字符.
+			日期类型:
+				可以使用@temporal(temporalType.timestamp) 来对应数据库中的 datetime类型
+				使用@temporl(temporalType.data) 来对应数据块中的data类型.
+			
+		实体, 视图, VO
+			实体 当做 vo, dto来用 --> @transient
+				实体也可以当做vo来进行使用, 我们在实体类中需要使用 @transient来讲不需要映射的属性标注起来,
+				这个正好可以使我们来八实体当做vo来使用.
+				
+			视图 当做 实体来用 --->
+				hibernate允许我们采用映射实体的方式来映射视图, 但是视图没有主键.
+				操作数据的时候, 同实体一样.
+		功能:
+			
+			上传:
+				(1) 获得新文件的路径
+					1> 获得目录 2> 获得后缀名 3> 获得新文件名
+				(2) 以流的方式将上传文件的数据复制到新文件中
+				
+			列表: (最深情, 它竟然将列表整体都进行封装)
+				(1) 对查询参数进行封装
+					1> 你可以使用map的方式来进行封装
+					2> 也可以使用pojo的方式来进行封装
+					
+				(2) 对分页参数进行封装
+					使用了threadLocal模式 +  filter来实现分页
+					并且讲排序的功能 也弄出来进行分页了
+			
+			注意:
+				日志的记录:
+					在进行dml操作的时候, 要进行日志的记录.
+					也就是在修改数据的时候, 一定要记录日志.
+					同时, 如果一个方法你想知道它运行了多场时间, 也可以记录下时间,
+					这个一般都是在批量处理的时候, 才会记录操作的时间的.
+		
+		
+3: 编码风格:
+	大部分的编码风格还是采用之前的风格, 唯一变化最大的页面的命名上:
+		采用 模块名_功能名 来进行命名.
+		addUI, addBatchUI, add, addBatch, delete, updateUI, update, list, upload, 
+		download
+	
+	并且, 还多了一个 tiles配置, tiles配置采用的时候 模块.功能的命名 方式
+	
+4:	
+
+
+
+5: 
+	treeMap ---> 红黑树
+	integer 和 long如何互相转换呢?
+	如何设置默认的值.
+	PropertyUtils.describe
+	PropertyDescriptor property = PropertyUtils.getPropertyDescriptor(queryObj, name);
+	StringUtils.capitalize(key)
+	new DateConverter().convert(java.util.Date.class, value)
+	StringUtils.trim(value)
+	ToStringBuilder.reflectionToString(selfOpinion));
+	criteria.add(Restrictions.sqlRestriction(whereHql.toString(), new Object[]{uupmUser.getOrgId(),uupmUser.getUserId()}, new Type[]{Hibernate.INTEGER,Hibernate.INTEGER}));
+	
+	
+	

@@ -1,0 +1,54 @@
+分布式:
+	2.2年以上Hadoop分布式平台项目、列数据库项目、数据仓库项目经验；
+	3.精通常见分布式计算框架和技术原理，如Hadoop 、MapReduce、Storm、Spark等；
+	4.熟悉常见的分布式存储相关技术，包括HDFS，HBase、Hive、Redis、mongodb、       Flume、Kafaka、Sqoop、Zookeeper等，至少熟练掌握其中2种技术的原理；
+	5.持续跟进开源社区的新功能特性优先；熟悉内存数据库、MPP技术者优先；
+	
+大数据
+	2、熟悉Linux开发环境，熟练掌握hadoop/spark/storm等分布式数据处理框架；
+	3、熟练使用mysql、oracle等关系型数据库以及redis、mongodb等NoSQL数据库；
+	4、熟悉常见的数据结构和算法设计，有分布式系统开发及调优经验；
+	5、有大型网站数据后台开发经验者优先；
+	3、精通Java语言，掌握常用算法和数据结构，多线程编程技术；熟悉性能调优、设计模式;
+	4、了解Hadoop MapReduce编程框架或了解NoSQL产品优先；
+	5、有Hadoop/Hive/Hbase实践经验的优先；
+	6、了解JAVA 网络编程、能够使用mina/netty/kafka框架进行通信程序的编写优先；
+	
+	3.熟悉常用服务器（Apache,  Tomcat）环境配置，了解集群和网络的基础知识；
+	4.熟悉常见存储技术（Oracle, Mysql,  NosqlDB），WebService（Json/SOAP）；
+	5.熟悉Linux/Unix平台，熟练使用常见命令，熟悉shell（bash/csh/shell/tcsh）脚本；
+	6.熟悉面向对向编程，能够熟练使用常见UML工具建模。熟悉自动化单元测试技术，测试驱动模式和敏捷开发模式，学习能力强；
+	7.理解Hadoop的基本原理，熟悉hadoop框架，熟悉hadoop平台关键参数；
+	8.理解Mapredcue计算过程，能根据业务需求设计出适合计算方法；
+	
+	1 对Hadoop实施经验，对HDFS，MR，Oozie，Zookeeper，Hive，Impala，Mhout，Spark等相关技术有深入了解；
+	2基于hadoop、Spark、Storm、MapReduce、HDFS、YARN等技术开发大数据处理引擎；
+	3良好的数据结构和算法基础,算法代码化；
+	4利用大数据平台实现对数据分析和处理；
+	5大数据可视化工具设计、研发与测试、维护,大数据ETL研发与测试、维护；
+	6了解hadoop集群及其周边常用模块,搭建与部署hadoop集群；
+	
+	精通Hadoop, Spark, Hive, Impala中的一种或者几种技术
+	熟悉Linux操作系统基本配置管理
+	精通主流NoSQL数据库开发
+	熟练掌握mysql、oracle开发技术
+	熟练掌握主流的Web开发框架(SpringMVC, myBatis等)
+	
+	2、熟悉Hadoop、Hbase、Hive，两年以上Hadoop开发经验；
+	3、熟悉Map/Reduce编程；
+	4、有ZooKeeper等相关经验者优先；
+	5、对数据结构、算法有深刻理解；
+	6、熟悉Linux开发环境。
+	
+高级工程师:
+	1、了解Maven、Gradle等项目管理工具
+	2、熟练使用Linux/UNIX等服务器
+	3、熟悉常见应用服务器，如Weblogic、JBoss、Tomcat等
+	4、有大数据处理、ESB、SOA、大型分布式系统实践经验的优先
+	5、熟练掌握java多线程并发程序设计技术;
+	6、熟悉TCP/IP协议,HTTP协议和Socket网络编程;
+	7、具有面向对象设计及编程经验；了解UML、XML。
+	8、Struts、Struts2与Spring+Hibernat、MyBatis, springmvc等框架；
+	9、熟悉UML，系统分析和设计，能按照规范的软件开发流程，完成软件的需求、设计、编码和测试工作，具有规范的开发文档写作能力；
+	10、为人正直，思维严谨，工作主动，有较强的学习创新能力，在对新技术的掌握方面保持与时俱进
+	11、具有较好的沟通、协作和学习能力，良好的团队合作精神

@@ -1,0 +1,156 @@
+1: 在请求到达struts2的核心拦截器之前, 做了哪些事情呢?
+	PaginationFilter
+		--- 分页拦截器
+		
+	Auth Filter
+		--- ?
+	history Filter
+		--- ?
+
+2: 再容器启动的时候又做了哪些事情呢? 
+
+	<listener>
+			<listener-class>com.aspire.common.ApplicationProperties</listener-class>
+	</listener>
+	--- 
+	
+	<listener>
+			<listener-class>org.apache.struts2.tiles.StrutsTilesListener</listener-class>
+	</listener>
+	---- apache tiles 拦截器
+		
+	<listener>
+			<listener-class>com.aspire.ec.permission.filter.AuthContextListener</listener-class>
+	</listener>
+	--- 
+
+3: web.xml 中的 jsp-config 和login-config的作用是什么呢?
+	
+
+4:  
+	=======================  action ========================
+			(1)在action中是如何处理参数的呢?
+					
+				如何进行参数类型转化的呢?
+					--- 对date采用了全局类型转化器
+				如何封装数据的呢?
+					--- 使用model的方式来处理参数
+				如何验证参数呢?
+					--- 使用struts2的validate方法来进行验证
+				
+			(2)再action如何获得service呢?
+				private CommAnnouncementService service = CommAnnouncementService.getInstance();
+					--- 使用单例模式来获得service对象
+					
+			(3)在action中如何将数据放到某一个范围呢?
+				使用action的属性来存放 放回的数据
+				
+			(4)在action中如何回显数据呢?
+
+			(5)再action中添加, 修改, 删除成功后是如何进行跳转的呢?
+				--- 添加, 修改, 删除成功后直接跳转到列表页面, 兵没有任何的提示信息
+				
+			(6) 页面是如何回显数据的呢?
+				是直接使用了标签
+			
+	============================= service =====================
+			(1) service如何处事务
+					--- 使用 cglib动态增强字节码
+					
+			(2) service如何床架
+					--- 使用了单列模式
+					
+	========================== dao层 =======================
+			(1) 如何获得链接
+					---- 每次都是获得一个新的session
+					
+	========================== 页面 ===============
+			(1) 页面的验证采用jquery validator的方法
+			
+			(2) 回显示采用标签的自动显示
+	
+		
+5: 思考各个层的代码规范是什么呢?
+		action层的规范:
+			toadd toEdit edit toView list del
+			
+		service层规范
+			findbyId findall findpage
+			save del
+
+		dao层的规范
+			findById
+			findByProperty
+			findbyexample
+			findby...
+			findall
+			
+		注解,日志规范:(使用英文)
+			--- 方法注解
+				/**
+				 * Add/update commAnnouncement instance in db
+				 */
+			--- 日志
+				log.debug("Time consum in action : "+(System.currentTimeMillis() - start)+"ms");
+			
+			--- 方法
+				public List findAll() {
+					log.debug("finding all CommAnnouncement instances");
+					try {
+						String queryString = "from CommAnnouncement";
+						Query queryObject = getSession().createQuery(queryString);
+						return queryObject.list();
+					} catch (RuntimeException re) {
+						log.error("find all failed", re);
+						throw re;
+					}
+				}
+
+6: ec-common项目源码:
+	
+	actionSupport
+		commonAction:
+			ListViewAction:
+	
+			commonListView:
+				
+				currPosition 
+					---- 当前所在页面
+					
+				queryColumn
+					---- 查询参数
+					
+				queryColumnName
+					---- 查询参数名称
+					
+				result
+					--- 结果集
+					
+				displayCollection
+					--- 字典显示值集合
+					
+				addUrl
+					--- 添加url
+					
+				editUlr
+					--- 编辑url
+					
+				TranslateValue
+					--- ?
+				
+	commonService
+		
+		
+		
+	commonHibernateDao
+		domsBaseHibernateDao
+		
+
+7: 				
+
+		
+		
+		
+			
+	
+	

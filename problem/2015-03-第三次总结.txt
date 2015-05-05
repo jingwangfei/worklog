@@ -1,0 +1,24 @@
+学到的知识:
+	linux系统
+		linux操作系统的tab命令提示符, 管道命令, 历史命令, 输出重定向
+		linux系统的文件权限
+		linux文件查询, which whereis locatedd find
+		linux vi编辑器
+		linux文件操作命令
+		
+	orcal
+		orcal中的索引, orcal中的序列, orcal中的事务隔离级别
+
+下周需要学习以及工作:
+	个人问题:
+		1: orcal中如何进行分页查询
+		2: 如何利用myclipse来进行反向生产
+		
+	工作:
+		
+	
+		
+	
+
+
+	

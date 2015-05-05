@@ -1,0 +1,292 @@
+1: doms_feedback_svc
+	(1) 项目的功能与作用
+		向bsr发送请求, 该请求包含业务办理, 业务变更, 资费变更等11种不同类型的请求.
+		该请求的报文是xml格式数据
+	
+	(2) 项目的设计思路是什么
+		
+	
+	
+	(3) 项目的总体架构是什么
+		vo, 
+			实现了xsd与实体的映射
+			xml ---> xsd <----> 实体
+		
+		dao,
+			体系结构
+			Idao<I>
+				BaseDAO
+					BIP2B290T2001091DAO
+		
+			使用了配置sql语句 + DButils 的方式来操作数据库
+			从数据中获得数据并且封装成为vo对象
+		
+		service,
+			体系结构
+			IRequester
+				BaseRequester
+					BIP2B290T2001091
+					
+			定义了3个标准的方法:
+				preOperate
+				feedBack
+				postOperate
+				
+		commonJob
+			face模式, 用于指定参数用来运行不同的任务
+		
+		
+		数据库设计
+		
+		================技术=============
+		xjc
+		JAXB
+		
+	
+	(4) 项目的某个功能
+	
+		...
+		
+		
+	
+	
+2: jdk5中的读写锁
+	(1) 读写锁的最用是什么呢? 也就是出现了什么情况, 需要读写所来进行处理呢?
+		出现的原因:
+			我们当多个线程共同操作共享数据的时候, 会出现线程不同步的问题, 也就是线程安全问题.
+			这个时候, 我们需要Lock对象来使线程同步;
+			但是如果这几个线程都是读取数据, 并没有操作数据, 完全可以来进行并发操作的.
+			不需要进行同步控制. 如果加上同步, 势必会导致性能的低下.
+			这个时候就需要读写锁
+		
+		读写锁的互斥情况:
+			读中不能写. 读中可以读.
+			写中不能读, 写中不能写.
+			
+		代码模拟上述情况:
+			6个线程, 3个线程读, 3个线程写
+
+	(2) 读写锁的使用
+		模拟 RennTrantReadWriteLock文档中的列子来写一个缓存类.
+		
+3: condition
+
+	(1) condition的作用是什么? 它是为了解决什么问题呢? 与其他解决方案相比, 有什么区别?
+		condition的作用同object对象中的wait和notify方法的作用一样, 用来完成线程通信的;
+		
+		但是相比wait和notify, condition还可以实现多路通信的功能.
+		
+	(2) codition的核心方法以及类体系结构
+		Condition<I>
+		lock.newCondition()来创建一个condition
+		condition.await(); 线程等待
+		condition.signal(); 唤醒一个线程
+		condition.signalAll(); 唤醒所有的线程
+		
+	(3) condition的简单使用(只有2个线程通信)
+		public class ConditionTest {
+
+			public static void main(String[] args) {
+				final SharaData sharaData = new SharaData();
+
+				new Thread(new Runnable() {
+
+					@Override
+					public void run() {
+						for (int i = 0; i < 50; i++) {
+							sharaData.sub1();
+						}
+					}
+				}).start();
+
+				new Thread(new Runnable() {
+
+					@Override
+					public void run() {
+						for (int i = 0; i < 50; i++) {
+							sharaData.sub2();
+						}
+					}
+				}).start();
+			}
+
+			static class SharaData {
+				Lock lock = new ReentrantLock();
+				Condition condition = lock.newCondition();
+				boolean isSholdSub1 = true;
+
+				public void sub1() {
+					lock.lock();
+					try {
+						while (!isSholdSub1) {
+							try {
+								condition.await();
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+						}
+						for (int i = 0; i < 10; i++) {
+							System.out.println("sub1: " + i);
+						}
+
+						isSholdSub1 = false;
+						condition.signal();
+					} finally {
+						lock.unlock();
+					}
+
+				}
+
+				public void sub2() {
+					lock.lock();
+					try {
+						while (isSholdSub1) {
+							try {
+								condition.await();
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+						}
+						for (int i = 0; i < 20; i++) {
+							System.out.println("sub2: " + i);
+						}
+
+						isSholdSub1 = true;
+						condition.signal();
+					} finally {
+						lock.unlock();
+					}
+				}
+			}
+		}
+	
+	(4) condition的多路线程通信
+			public class ConditionTest {
+
+				public static void main(String[] args) {
+					final SharaData sharaData = new SharaData();
+
+					new Thread(new Runnable() {
+
+						@Override
+						public void run() {
+							for (int i = 0; i < 50; i++) {
+								sharaData.sub1();
+							}
+						}
+					}).start();
+
+					new Thread(new Runnable() {
+
+						@Override
+						public void run() {
+							for (int i = 0; i < 50; i++) {
+								sharaData.sub2();
+							}
+						}
+					}).start();
+
+					new Thread(new Runnable() {
+
+						@Override
+						public void run() {
+							for (int i = 0; i < 50; i++) {
+								sharaData.sub3();
+							}
+						}
+					}).start();
+				}
+
+				static class SharaData {
+					Lock lock = new ReentrantLock();
+					Condition condition = lock.newCondition();
+					Condition condition2 = lock.newCondition();
+					Condition condition3 = lock.newCondition();
+					int isSholdSub1 = 1;
+
+					public void sub1() {
+						lock.lock();
+						try {
+							while (1 != isSholdSub1) {
+								try {
+									condition.await();
+								} catch (InterruptedException e) {
+									e.printStackTrace();
+								}
+							}
+							for (int i = 0; i < 10; i++) {
+								System.out.println("sub1: " + i);
+							}
+
+							isSholdSub1 = 2;
+							condition2.signal();
+						} finally {
+							lock.unlock();
+						}
+
+					}
+
+					public void sub2() {
+						lock.lock();
+						try {
+							while (2 != isSholdSub1) {
+								try {
+									condition2.await();
+								} catch (InterruptedException e) {
+									e.printStackTrace();
+								}
+							}
+							for (int i = 0; i < 20; i++) {
+								System.out.println("sub2: " + i);
+							}
+
+							isSholdSub1 = 3;
+							condition3.signal();
+						} finally {
+							lock.unlock();
+						}
+					}
+
+					public void sub3() {
+						lock.lock();
+						try {
+							while (3 != isSholdSub1) {
+								try {
+									condition3.await();
+								} catch (InterruptedException e) {
+									e.printStackTrace();
+								}
+							}
+							for (int i = 0; i < 30; i++) {
+								System.out.println("sub3: " + i);
+							}
+
+							isSholdSub1 = 1;
+							condition.signal();
+
+						} finally {
+							lock.unlock();
+						}
+					}
+				}
+			}		
+	(5) Condition类中的模拟的缓冲队列
+		
+	
+	
+4: 思想:
+	使用流程图的方式来描述代码的流程
+	
+5: finally 和 return 水仙执行呢?
+	先执行finally, 再执行return.
+	
+	
+	
+6: ec_serv_inf项目
+
+
+
+
+
+
+	

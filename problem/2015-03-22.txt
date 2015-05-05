@@ -1,0 +1,53 @@
+4: 问题:
+	项目问题:
+	(1) Info_fee中的列长度太少
+		如 367行 数据:
+		
+			1、免费邮箱：0元/月
+			（1）邮箱容量2G、发送邮件最大附件20MB；
+			（2）网盘容量500MB；
+			2、5元邮箱：功能费5元/月
+			（1）邮箱容量10G、发送邮件最大附件30MB；
+			（2）网盘容量1G；
+			（3）PushEmail功能；
+			3、20元邮箱：功能费20元/月
+			（1）邮箱容量无限量、发送邮件最大附件50MB；
+			（2）网盘容量10G；
+			（3）PushEmail功能；
+			（4）赠送10MB GPRS流量（超出部分按照标准GPRS收取，可计入用户已订购的GPRS套餐）；
+		
+	(2) 视图中的
+		BUREAU_NUM   NUMBER(9)     Y
+		
+	(3) 为什么查询的时候会有查询条件呢?
+	
+	(4) 		
+		Criteria criteria = dao.getSession().createCriteria(BureauDataView.class);
+		dao.findBureadDataList(bureauDataView);
+		Example example = null;
+		if (bureauDataView != null) {
+			example = Example.create(bureauDataView);
+			example = (Example) example.enableLike();
+			criteria.add(example);
+		}
+		results = dao.findPage(criteria);
+	
+	(5) 
+		create or replace view view_bureau_data as
+		select b.id,b.BUREAU_NUM,b.service_id,b.service_name,b.ip,b.url,o.order_number,r.relation_id,o.ec_name,r.prov_id
+		from
+			bureau_data b,
+			order_relation r,
+			service_handle_order o
+		where 
+			b.service_id=r.service_id (+) and
+			r.product_id=o.product_id (+) and
+			(o.status is null or o.status<>2);
+			
+	(6) 如何查看表是否被锁定了呢?
+		为什么在插入的时候, 程序, 数据库都没有反应呢?
+	
+	
+	(7) 数据库中视图的详解.
+			在开发工程中, 讲视图看成是表来进行开发.
+	

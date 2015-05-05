@@ -1,0 +1,168 @@
+1: "菜鸟" 程序员 与 "大神"程序员的区别?
+	最重要的是要自己去思考:
+		(1) 考虑如何实现?
+			当做一个功能, 或者是模块, 或者是某个算法的时候
+			首先, 应该去考虑如何去实现这个功能, 实现这个功能的大体思路是什么呢?
+			某个步骤都是该如何实现的呢? 这个就相当于写算法中, 伪算法
+		
+		(2) 这个实现过程中又哪些问题呢?
+			然后去查找相关的知识
+			
+		(3) 去写代码写自己思路.
+				代码是对自己思维结晶的体现.
+
+2: 平衡树
+	平衡树作用是什么呢?
+		平衡二叉树主要是解决 二叉查询树退化为单链表的问题.
+		二叉查询树退化为单链表的问题:
+			随着对二叉查询树不断进行插入或者是删除, 二叉查询树的结构是不顶的, 一直在变化, 最坏的情况是
+			变成一个单支二叉树, 也就是单列表, 这个时候, 二叉查询树的查询, 添加, 删除操作的效率都会变成n
+			这就失去了二叉查询树的本意了.
+		而平衡树正好解决了这个问题, 在插入和删除节点的时候, 要通过旋转节点, 来维持二叉树的平衡
+		
+	什么是平衡树?
+		平衡树: 
+			树中的每个节点的左右子树的高度只差不能超过1的树, 就叫做平衡树, 同时也叫做avl树.
+		平衡:
+			平衡是一种性质
+		平衡因子:
+			左右子树高度的差就叫做平衡因子.
+		平衡节点:
+			以某一个节点为根的树, 具有平衡性, 那么这个节点就叫做平衡节点,
+	
+	平衡树具有哪些特点?
+		左右子树的高度只差不超过1
+	
+	平衡树的存储?
+		这个同树的存储一样, 不需要进行考虑.
+		
+	平衡树的各种操作是如何继续实现的呢?
+		平衡树的最重要的操作是旋转节点.
+		
+		
+
+
+3: 	scheduler框架的时候用 ---> 定时任务
+	spring的定时调度.
+	
+	(1)quartz框架
+		1> 新建一个job  --->Job接口
+			
+		2> 编程;
+			(1) 通过schedulerfactory创建scheduler调度器
+				--> StdSchedulerFacotry 调度工厂
+			(2) 创建一个任务详情
+				--> JobDetail 任务详情
+				创建一个触发器
+				--> SimpleTrrigger/CronTrrigger
+			(3) 调度器调度任务
+				scheduler.scheduleJob();
+		
+		// ============== 个人任务 ========
+		public class MyJob implements Job {
+
+			@Override
+			public void execute(JobExecutionContext arg0) throws JobExecutionException {
+				System.out.println("MyJob.execute()");
+			}
+		}
+		
+		// ================== 调度任务  ================
+		Scheduler scheduler = null;
+		try {
+			// 新建调度器
+			scheduler = StdSchedulerFactory.getDefaultScheduler();
+
+			if (null != scheduler) {
+				// 新建任务
+				JobDetail jobDetail = new JobDetail("job", "job", MyJob.class);
+
+				// 新建触发器
+				String cronExpression = "0 45 11 * * ?";
+				Trigger trigger = new CronTrigger("trigger", "trigger", "job", "job", cronExpression);
+
+				// 调度任务
+				scheduler.scheduleJob(jobDetail, trigger);
+
+				// 启动
+				scheduler.start();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	
+	(2) spring对quartz的支持
+		新建一个job  ---> QuartzJobBean 接口
+					 ---> JobDetailBean
+			public class MyJob extends QuartzJobBean { 
+				private MyTask myTask; 	  
+				protected void executeInternal(JobExecutionContext context)  
+						throws JobExecutionException {    
+					myTask.run();  
+				}  
+				public MyTask getMyTask() {  
+					return myTask;  
+				}  
+				public void setMyTask(MyTask myTask) {  
+					this.myTask = myTask;  
+				}  
+			}  			 
+					 
+			<bean id="myJob" class="org.springframework.scheduling.quartz.JobDetailBean">  
+				<property name="name" value="myJob"/>  
+				<property name="group" value="myGroup"/>  
+				<property name="description" value="myJob"/>  
+				<property name="jobClass" value="org.garbagecan.springstudy.schedule.quartz.MyJob"/>  
+				<property name="jobDataAsMap">  
+					<map>  
+						<entry key="myTask" value-ref="myTask" />  
+					</map>  
+				</property>  
+			</bean> 
+			
+		新建一个触发器
+						---> CronTriggerBean 		
+			<bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">  
+				<property name="jobDetail" ref="myJob"/>  
+				<property name="cronExpression" value="0/10 * * * * ?"></property>  
+			</bean> 
+			
+		新建Scheduler工厂来调度任务
+			<bean id="timerFactory" class="org.springframework.scheduling.quartz.SchedulerFactoryBean" lazy-init="false">  
+				<property name="triggers">  
+					<list>  
+						<ref local=""cronTrigger""/>  
+					</list>  
+				</property>  
+			</bean>  
+		
+
+4: ConcurrentHashMap的实现
+	
+	ConCurrentHashMap与map的区别是什么呢?
+		Hashmap, 线程不同步的hashMap
+		HashTable, 效率低下的HashTable.
+		ConCurrentHashMap, 分段锁技术
+	
+	ConCurrentHashMap是如何保持并发的呢?
+		将一个Map分解成为, 多个HashTable, 来进行分段锁操作
+	
+	ConCurrentHashMap的实例?
+		
+
+5: 如何读一个源码呢?
+	1> 首先, 应该从整体架构上来看, 整个代码的构成, 
+		也就是各个类, 有哪些类, 类之间的关系, 类的核心属性
+	2> 在接着看核心的方法
+		
+		
+	
+6: 
+
+	
+	
+
+
+
+
+ 

@@ -1,0 +1,181 @@
+1: 
+	开发:
+		边际流程, 核心流程, 
+		异常流程, 
+		
+		测试驱动开发,
+		边际测试
+		
+		
+		循环:
+			每次循环的内容
+			循环驱动器 --> 如何从上一次循环进入下一次循环呢?
+			循环结束条件 --> 对于树来说, 一般都是可以采用虚拟空节点来进行模拟.
+
+	测试:
+		核心流程测试
+		最重要的边际测试
+		
+	代码的强壮性
+	
+		
+2: 
+
+	
+	? 集合	? 容器		
+	? 数组	? 关联数组	? Multimap	? 集
+	? 多重集	? 散列表	? 树状数组	
+	? 列表	? 链表	? 队列	? 堆栈
+	? 循环队列	? 跳跃列表		
+	? 树	? 二叉查找树	? 堆	? 线段树
+	? 红黑树	? AVL树		
+	? 图	? 有向无环图	? 二元决策图	? 无向图
+	
+	
+	
+	
+	树, 
+	二叉树, 满二叉树, 完全二叉树,
+	二叉查询树, 红黑树
+	最大堆树, 最小堆树, 
+	avl树, 平衡树
+	B-树
+	
+
+3: 二叉树的删除
+
+
+
+
+4: shell编程中循环语句
+	for循环:
+		任意类型的字列表
+			for x in one two three four
+			do
+				echo number $x
+			done
+		
+		通配符文件
+			for x in /home/*
+			do
+				echo $(basename $x) is living in /home
+			done
+		
+		循环次数
+			for x in $(seq 1 10)
+			do
+				echo $x
+			done
+			
+	while循环
+		a=1
+		while [ $a -le 10 ]
+		do
+			echo $a
+			a=$(($a + 1))
+		done
+
+5: 	shell中的通配符:
+		* : 代表任意个数, 任意字符.
+		? : 代表单个任意字符.
+		[1-9], [123]:代表范围
+
+	seq 1 10 ---> 产生从1到10的序列值
+	
+	basename 路径 --> 将路径的前面去除, 仅仅剩下文件名.
+	
+	linux中的vi编辑器如何撤销删除
+		使用u可以进行撤销,
+		使用U可以直接撤销到最原始的状态
+		使用 ctrl + r可以恢复撤销的操作.
+		
+	linux, shell的运行, 有2种方式:
+		bash/sh 文件, 这种方式不需要有权限
+		./文件, 这种方式需要修改文件的权限.
+		
+	linux中的引号, 单引号, 反引号, 反斜线
+		`: 反引号, 将反引号中的字符当做系统命令来执行, 或者是使用它$()来具有
+			同样的作用, 将字符当做命令来进行执行.
+			
+		'': 会忽略单引号中的特殊字符含义;
+			比如'\taa' 会执行进行字符的输出, 而不是特殊含义
+		
+		"": 不会阻止对命令的解析
+		
+		\: 这个同正则表达式一样, 是指原意字符.
+		
+		$((...)): 表达式
+		
+	强制中断程序的执行
+		ctrl + c
+	
+	
+6: 
+	httpservlet的源码
+		servlet
+			init(servletConfig)
+			gegtServletConfig()
+			destory()
+			service(servletRequest, servletResponse)
+			
+		servletConfig --> 配置信息(web.xml)
+			getServletName()
+			getInitParameter()
+			getInitParameterNames()
+			
+		GenericServlet --?
+			init() 
+			
+		httpservlet
+		
+	
+	timer的源码
+		Timer --> 定时器
+			scheduler();
+		
+		TimerTask --> 实现了runnable方法
+		
+		
+	
+	
+	读取配置文件的最优方法
+		Properties
+			load(is)
+			.getProperty()
+		ResourceBundle的使用
+			.getBundle
+			.getString
+		
+
+	定时任务 quartz
+		SchedulerFacotry
+		
+		Scheduler
+		
+		JobDetail
+		
+		CronTrigger
+		
+		scheduler.addJob()
+		scheduler.scheduleJob()
+		scheduler.start();
+		shutdown();
+	
+	
+	ConcurrentLinkedQueue
+		并且操作时候的集合操作
+		
+		
+	cron表达式
+		秒 分 时 天 月 周 [年]
+		
+		取值:
+			周 --> 星期几, 1 - 7 (日...六)
+		特殊符:
+			,:枚举 1,5 1分和5分
+			-:范围 1-5 1,5分钟的没一分
+			*:任意 任意取值
+			/:增量 5/20 5分, 25分, 45分执行一次
+			L: 用于周, 5L -->最后一个星期4
+			W: 用于天, 5W --> 离5日最近的一个工作日
+		

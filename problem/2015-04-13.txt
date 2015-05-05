@@ -1,0 +1,139 @@
+1: 平衡树的移动
+			
+
+
+2: struts2如何实现文件上传进度显示
+	
+	fileupload
+		fileupload的使用
+		
+		
+		fileupload的核心类图
+	
+	
+	fileupload 与 strut2的整合
+	
+		
+	
+	
+	上传进度的实现
+		由于struts2中自带的文件解析器没有响应的上传进度监听器, 
+		因此我们需要自定义一个文件上传解析器, 并添加文件上传监听器, 来监听文件上传状态.
+		然后用我们的解析器替换掉struts2中自带的监听器.
+		
+		自定义解析器:
+			// 模拟 multipartRequest下的实现类jakartaMultiparrtRequest
+			public class MyMultiPartRequest implements MultiPartRequest 
+			
+			// 核心是, parse()方法中添加
+			ServletFileUpload upload = new ServletFileUpload(fac);
+			upload.setSizeMax(maxSize);
+			/* 自己新建监听器 */
+			ResourceProgressListener progressListener = new ResourceProgressListener(
+					servletRequest);
+			upload.setProgressListener(progressListener);// 添加自己的监听器
+			
+		监听器:
+			public class ResourceProgressListener implements ProgressListener {
+				private HttpSession session;
+				 
+				public ResourceProgressListener(HttpServletRequest request) {
+				   session = request.getSession();
+				   ResourceFileUploadStatus newUploadStatus = new ResourceFileUploadStatus();
+				   session.setAttribute("currentUploadStatus", newUploadStatus);
+				}
+			 
+				public void update(long readedBytes, long totalBytes, int currentItem) {
+				   ResourceFileUploadStatus status = (ResourceFileUploadStatus) session.getAttribute("currentUploadStatus");
+				   status.setReadedBytes(readedBytes);
+				   status.setTotalBytes(totalBytes);
+				   status.setCurrentItem(currentItem);
+				  
+				   double d = readedBytes*1.0/totalBytes*100;
+				   status.setRate((int)d);
+				}
+
+			}
+		// ====== 上传实体类 ====	
+		public class ResourceFileUploadStatus implements java.io.Serializable{
+
+			private long readedBytes = 0L;
+			private long totalBytes = 0L;
+			private int currentItem = 0;
+			private int rate=0; /*上传百分比*/
+		}
+			
+		// ==== 配置文件 ===
+		<bean type="org.apache.struts2.dispatcher.multipart.MultiPartRequest" name="requestParser"
+       class="com.aspire.common.util.MyMultiPartRequest" scope="default" optional="true" />
+		<constant name="struts.multipart.handler" value="requestParser" />
+	
+		// ==  action 以及配置 ===
+		
+		public class FileProgressAction extends ActionSupport {
+			
+			private ResourceFileUploadStatus state;
+
+			public ResourceFileUploadStatus getState() {
+				return state;
+			}
+
+			public void setState(ResourceFileUploadStatus state) {
+				this.state = state;
+			}
+
+			public String queryProcess() throws Exception{
+				
+				state = (ResourceFileUploadStatus)ServletActionContext.getRequest().getSession().getAttribute("currentUploadStatus");
+				
+				return "success";
+			}
+
+		}
+		配置: 
+		<package name="upload" namespace="/upload" extends="json-default">    
+			<!-- 查询上传进度 -->  
+			<action name="progress" class="com.aspire.common.util.FileProgressAction" method="queryProcess">  
+			   <result name="success" type="json">
+			   </result>  
+			</action>  
+		</package>
+			
+		// ======前端调用 ====
+		 function addressAction(){  
+			$.post(  
+			'<%=request.getContextPath() %>/upload/progress.do',  
+			function(data){  
+				console.log(data.state.rate);
+			  $("#img").html("");               
+			  var num=data.state.rate/10;  
+
+			},  
+			'json'            
+		   );  
+		}  
+		
+		if(attachFile != null&& attachFile !=''){
+			id=window.setInterval(addressAction,500);
+		}
+		
+		
+
+3: 	
+	c:choose
+	c:when
+	c:if
+	${empty ...}
+
+
+4: 修改程序
+
+
+
+
+5: 
+
+
+
+
+6: 

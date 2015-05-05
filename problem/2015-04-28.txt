@@ -1,0 +1,70 @@
+1: sql语句优化流程
+	(1) 问题描述:
+		什么需要? 写了一个什么样的sql语句? 出现了什么问题?
+	
+	(2) 对问题进行分析
+		是不是表连接问题?
+		是不是子查询问题?
+		是不是嵌套问题?
+	
+	(3) 解决问题.
+		换位另外一个sql进行执行.
+
+
+2: 模拟svn了解git的相关命令:
+		
+		git help git \git help command
+		
+		git clone: 这是较为简单的一种初始化方式，当你已经有一个远程的Git版本库，只需要在本地克隆一份，例如'git clone git://github.com/someone/some_project.git some_project'命令就是将'git://github.com/someone/some_project.git'这个URL地址的远程版 本库完全克隆到本地some_project目录下面
+
+        git init和git remote：这种方式稍微复杂一些，当你本地创建了一个工作目录，你可以进入这个目录，使用'git init'命令进行初始化，Git以后就会对该目录下的文件进行版本控制，这时候如果你需要将它放到远程服务器上，可以在远程服务器上创建一个目录，并把 可访问的URL记录下来，此时你就可以利用'git remote add'命令来增加一个远程服务器端，例如'git remote add origin git://github.com/someone/another_project.git'这条命令就会增加URL地址为'git: //github.com/someone/another_project.git'，名称为origin的远程服务器，以后提交代码的时候只需要使用 origin别名即可
+		
+		git pull：从其他的版本库(既可以是远程的也可以是本地的)将代码更新到本地，例如：'git pull origin master'就是将origin这个版本库的代码更新到本地的master主枝，该功能类似于SVN的update
+
+        git add：是将当前更改或者新增的文件加入到Git的索引中，加入到Git的索引中就表示记入了版本历史中，这也是提交之前所需要执行的一步，例如'git add app/model/user.rb'就会增加app/model/user.rb文件到Git的索引中
+
+        git rm：从当前的工作空间中和索引中删除文件，例如'git rm app/model/user.rb'
+
+        git commit：提交当前工作空间的修改内容，类似于SVN的commit命令，例如'git commit -m "story #3, add user model"'，提交的时候必须用-m来输入一条提交信息
+
+        git push：将本地commit的代码更新到远程版本库中，例如'git push origin'就会将本地的代码更新到名为orgin的远程版本库中
+
+        git log：查看历史日志
+
+        git revert：还原一个版本的修改，必须提供一个具体的Git版本号，例如'git revert bbaf6fb5060b4875b18ff9ff637ce118256d6f20'，Git的版本号都是生成的一个哈希值、
+	
+3: 	算法的作用性质, 以及学习方法
+	重视知识的本质，对于程序员来说这一点尤其重要。
+	程序员行业的知识芜杂海量，而且总是在增长变化。
+	
+	应对这个问题办法只能是：抓住不变量。
+	大量的新技术其实只是一层皮，背后的支撑技术其实都是十来年不变的东西。
+	
+	底层知识永远都不过时；
+	算法数据结构永远都不过时；
+	分析问题和解决问题的能力永远都不过时；
+	强大的学习能力和旺盛的求知欲永远都不过时；
+	你大脑的思维方式永远都不过时。
+	
+	
+	学习算法存在的问题:
+		我们常常是学习一个新的算法, 刚开始能写出算法, 感觉自己会了.
+		可以一旦过了一定时间, 比如半年, 再去写这个算法, 往往是写不出来的.
+		
+	针对上述的问题, 我们需要以下的新的学习方法, 或者是思路吧:
+		利用图形化的步骤来描述方法的步骤.
+		这个过程中最最重要的是循环的算法.
+		
+	写算法的步骤:
+		(1) 模拟画图流程 --> 思路
+			
+		(2) 将思路转换为核心代码
+			这里不涉及到比较细小的东西
+			仅仅是大体流程
+			
+		(3) 完善代码.
+			包含参数的检查, 
+			流程中的特殊情况等等.
+ 	
+	
+4:  

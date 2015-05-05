@@ -1,0 +1,160 @@
+1: orcal分页:
+	(1) rownum详解
+		什么是rownum?
+			rownum是为查询结果集顺序分配的编号;
+			
+		rownum的特性:
+			1> 他是一个伪列. (可以当做字段来使用, 但是在它不属于任何表, 不能再它前面添加表)
+			2> 它始终是从1开始的编号. (在使用 rownum = 2. rownum > 2 这些语句是你不会查询出来数据的, 因为不能
+								确定rownum是从1开始, 但是 rownum < 1 是可以的)
+			======= 实例 =========
+			rownum的使用方式
+				rownum对于等于某个值的查询条件
+					rownum = 1 是正确的, 但是 rownum = 2, 就是不正确的, 因此他不能缺失rownum是从1开始的, 
+										也就是说他不包含1.
+				
+				rownum对于大于某个值得查询条件
+					rownum > 2是不正确的, 原因同上.
+				
+				rownum对于小于某个值得查询条件
+					rownum < 2是正确的, 因为他包含了1.
+			
+		
+	(2) orcal分页 不涉及排序, 仅仅是分页;
+		使用2层查询来进行分页查询, 但是这个查询, 却是不能进行排序.
+		select A.*, rownum rn from table A where rownum < 40 and rownum > 21 ×是错误的
+	
+		select B.* from 
+			( select A.*, rownum rn from table A where rownum < 40 ) B
+			where B.rn > 21
+			
+		本质上是讲 rownum这个伪列转为 一个普通的列, 可以使用 > 号, 从构建数据仓库的角度去思考
+		select B.* from (select A.*, rownum rn from bureau_data A where rownum < 5) B where B.rn > 3;
+			
+			
+		
+	(3) 分页与排序的关系
+		orcal数据库的是先查询数据, 然后才是分页的呢.
+		这就导致了
+			select * from table_name where rownum < 20 order by columnName
+			这个语句的排序仅仅是对前20条语句的排序.
+			
+		可以采用子查询解决, 先查询, 后排序的问题
+			select * (select * from table_name order by columnName) where rownum < 20
+	
+	
+	(4) orcal分页, 排序语句
+		第一种方式:
+			select * from (
+				select *, rownum rn from (
+					select * from table_name order by columnName
+				) where rownum < 20
+			) where rn > 21
+			
+			第二层查询 结合 第一层查询
+	
+		第二种方式:
+			select * from (
+				select *, rownum rn from (
+					select * from table_name order by columnName
+				) 
+			) where rn > 30 and rn < 41
+			仅仅使用最外层查询.
+		
+		二中方式的比较:
+			对比这两种写法，绝大多数的情况下，第一个查询的效率比第二个高得多。
+			这是由于CBO优化模式下，(cbo --> bose base opitimimis (基于代价的优化))
+			Oracle可以将外层的查询条件推到内层查询中，以提高内层查询的执行效率。
+				
+			对于第一个查询语句，第二层的查询条件WHERE ROWNUM <= 40就可以被Oracle推入到内层查询中，
+				这样Oracle查询的结果一旦超过了ROWNUM限制条件，就终止查询将结果返回了。
+			而第二个查询语句，由于查询条件BETWEEN 21 AND 40是存在于查询的第三层，而
+				Oracle无法将第三层的查询条件推到最内层（即使推到最内层也没有意义，因为最内层查询不知道RN代表什么）。
+			因此，对于第二个查询语句，Oracle最内层返回给中间层的是所有
+				满足条件的数据，而中间层返回给最外层的也是所有数据。数据的过滤在最外层完成，显然
+				这个效率要比第一个查询低得多。
+				上面分析的查询不仅仅是针对单表的简单查询，对于最内层查询是复杂的多表联合查询
+				或最内层查询包含排序的情况一样有效。
+	
+	
+	(5) hibernate中的有关orcal分页的处理
+		getSession().createQuery()
+			.setFirstResult()
+			.setMaxResults()
+			.list();
+			
+		源码: 在 hibernate.loader.loader类中, 
+			有这样一段:
+					dialog.getLimitString(); --> 这句话就是hibernate的分页语句
+					
+			在hibernate.dialog.orcal9i中
+				采用的就是上面的orcal第一种分页方式
+			在hibernate.dialog.mysql中,
+				采用的是limit 关键字
+
+
+2: orcal数据库乱码的问题
+	
+	 select userenv('language') from dual; --> 查看orcal客户端编码
+	 
+	 select * from V$NLS_PARAMETERS where PARAMETER = 'NLS_CHARACTERSET'; --> 查看orcal的服务端编码
+	 
+	 alter database character set internal_use JA16SJIS; --> 修改orcal的编码
+	 
+	 修改pl/sql developer 的编码格式：
+		创建一个名为“NLS_LANG”的系统环境变量，设置其值为“SIMPLIFIED CHINESE_CHINA.ZHS16GBK”，
+	
+	
+
+3: 乱码的基本知识:	
+	使用 "中" 来进行编码测试, 
+		"中" -->	e4 b8 ad (utf-8)
+		"中" --> 	4e2d (Unicode) 在Java内存中字符总是按照Unicode编码进行存储的.	
+		"中" --> 	d6d0 (gb2312)
+		"?"	 --> 	3f(iso-8859-1)
+		
+		System.out.println(Charset.defaultCharset())
+  		
+	编码:
+		(1) 字符串是否字符数组组成的.
+		(2) 在Java内存中字符总是以unicode编码存储的
+		(3) 在Java中一个字符占用2个byte字节
+		(4) 编码表中规定了字符 和 字节之间的转化关系
+		(5) 所有的编码都兼容iso-8859-1
+		
+		字符串		String				i		am			中	
+		
+		字符数组	char[]				[] [] []	[]	[4e2d] (unicode编码)
+	
+	utf-8编码---------------------------------------------------------------------------------
+		
+		字节数组	byte[]				[] [] []	[]	[e4][b8][ad]
+		
+	utf-8解码--------------------------------------------------------------------------------
+		
+
+
+
+3: 项目开发流程总结
+	(1) 看文档, 同产品经理了解需求
+	(2) 设计表, 反向生成实体, dao层.
+	(3) 设计程序框架
+	(4) 完成程序
+	(5) 测试
+	(6) 程序优化
+	
+	
+4: 技术总结
+	
+	编程思想:  
+		封装思想:
+		可配置思想:
+		设计模式思想:
+		框架思想:
+		足迹思想: 详细记录日志
+		测试边际: 
+		数据思想:
+			数据处理过程是什么?
+			数据从哪里来    ---->  数据进过了哪些处理 -----> 数据处理的最后结果是什么
+
+
